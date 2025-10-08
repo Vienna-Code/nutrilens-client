@@ -1,0 +1,176 @@
+.search {
+	width: 100%;
+	height: 100dvh;
+	padding: 1.5em;
+	display: flex;
+	flex-direction: column;
+	gap: 1em;
+	overflow-x: hidden;
+
+	.back {
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+
+		.icon {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
+
+	.searchBar {
+		width: 100%;
+		display: flex;
+		gap: 1em;
+
+		.bar {
+			flex: 1;
+
+			input {
+				width: 100%;
+				font-size: 1.2em;
+				padding: 0.7em;	
+				background-color: transparent;
+				color: var(--tx-color);
+				border: 3px solid var(--tx-color-op);
+				transition: border 0.2s ease-out;
+
+				&:focus {
+					border: 3px solid var(--ac-color);
+				}
+			}
+		}
+
+		button {
+			aspect-ratio: 1 / 1;
+			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 1.5em;
+			color: var(--pr-color);
+			background-color: var(--ac-color);
+			clip-path: polygon(30% 0, 100% 0, 100% 70%, 70% 100%, 0 100%, 0 30%);
+			transition: clip-path 0.5s cubic-bezier(0.68,-0.55,0.27,1.55), scale 0.2s cubic-bezier(0.45,0.05,0.55,0.95);
+
+			&:active {
+				scale: 0.85;
+			}
+
+			&.active {
+				clip-path: polygon(0 0, 70% 0, 100% 30%, 100% 100%, 30% 100%, 0 70%);
+			}
+		}
+	}
+
+	.wrapper {
+		width: 100%;
+		position: relative;
+	}
+
+	.filters {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 2em;
+		font-size: 1.2em;
+		padding-block: 1em;
+
+		.sort {
+			display: flex;
+			flex-direction: column;
+			gap: 1em;
+
+			.select {
+				width: 100%;
+				
+				select {
+					width: 100%;
+					padding: 1em;
+					background-color: var(--ac-color);
+					appearance: none;
+					color: var(--pr-color);
+					clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+				}
+			}
+		}
+
+		.price {
+			display: flex;
+			flex-direction: column;
+			gap: 0.5em;
+
+			span {
+				font-size: 0.9em;
+			}
+
+			.range {
+				width: 100%;
+				padding-inline: 0.5em;
+
+				.slider {
+					color: var(--ac-color) !important;
+				}
+			}
+		}
+
+		.aptFor, .type {
+			display: flex;
+			flex-direction: column;
+			gap: 0.5em;
+			
+			.fields {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 0.5em;
+			}
+		}
+	}
+	
+	.results {
+		width: 100%;
+		font-size: 1.2em;
+		padding-block: 1em;
+		display: flex;
+		flex-direction: column;
+		gap: 2em;
+		
+		.section {
+			display: flex;
+			flex-direction: column;
+			gap: 1em;
+
+			.locations {
+				display: flex;
+				flex-direction: column;
+				gap: 1em;
+
+				.location {
+					width: 100%;
+					padding: 1em;
+					background-color: var(--ac-color);
+					color: var(--pr-color);
+					clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+					cursor: pointer;
+					display: flex;
+					gap: 0.5em;
+					transition: 0.2s ease-out;
+
+					&:active {
+						scale: 0.95;
+					}
+
+					.distance {
+						opacity: 0.5;
+					}
+				}
+			}
+		}
+	}
+
+	.notFound {
+		font-size: 1.2em;
+		padding-block: 1em;
+	}
+}

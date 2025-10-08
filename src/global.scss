@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Signika:wght@300..700&display=swap');
+
+:root {
+	--pr-color: #1c1c1c;
+	--ac-color: #3b9c6a;
+	--tx-color: #f0f0f0;
+	--ac-color-op: #3b9c6a80;
+	--tx-color-op: #f0f0f02d;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: 'Signika', sans-serif;
+	font-weight: 400;
+	background-color: var(--pr-color);
+	color: var(--tx-color);
+}
+
+input, button, select {
+	border: none;
+	outline: none;
+	font-family: 'Signika', sans-serif;
+	font-weight: 400;
+	font-size: 1em;
+}

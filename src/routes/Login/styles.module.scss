@@ -1,0 +1,49 @@
+.login {
+	width: 100%;
+	height: 100dvh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 4em;
+
+	.logo {
+		width: 50%;
+		height: auto;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: contain;
+		}
+	}
+
+	.options {
+		width: 70%;
+		display: flex;
+		flex-direction: column;
+		gap: 1.5em;
+		
+		button {
+			font-size: 1.2em;
+			display: flex;
+			align-items: center;
+			padding: 1em;
+			gap: 0.5em;
+			background-color: var(--ac-color);
+			color: var(--pr-color);
+			clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+
+			&:disabled {
+				cursor: not-allowed;
+				opacity: 0.5;
+			}
+
+			.icon {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+		}
+	}
+}

@@ -1,0 +1,13 @@
+.leaflet-container {
+	height: 100%;
+	width: 100%;
+	background-color: var(--bg-color) !important;
+	
+	.leaflet-tile-pane, .leaflet-control-zoom {
+		filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+	}
+
+	.leaflet-control-attribution {
+		display: none;
+	}
+}

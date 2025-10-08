@@ -1,0 +1,19 @@
+.leaflet-routing-container-hide {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+
+	.leaflet-routing-collapse-btn {
+		left: 0 !important;
+		top: 0 !important;
+	}
+}
+
+.leaflet-routing-container {
+	filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
+.leaflet-routing-alt {
+	color: var(--pr-color);
+}
