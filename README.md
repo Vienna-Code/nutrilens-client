@@ -19,6 +19,9 @@ Primero clonamos este repositorio y accedemos al directorio con los comandos:
 > 
 > cd nutrilens-client
 
+> [!IMPORTANT] 
+> Asegurarse de crear un archivo .env en la raíz del proyecto que contenta la variable de entorno "VITE_API_URL", cuyo valor sea igual a la URL de nuestro servidor.
+
 Dependiendo de nuestro runtime a utilizar los comandos serán diferentes, por lo que debe referirse al que corresponda para ejecutar los comandos siguientes.
 
 <details>

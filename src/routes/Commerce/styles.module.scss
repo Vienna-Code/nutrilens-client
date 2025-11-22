@@ -1,0 +1,167 @@
+.location {
+	width: 100%;
+	height: 100dvh;
+	display: flex;
+	flex-direction: column;
+	position: relative;
+
+	.back {
+		position: absolute;
+		top: 1.5em;
+		left: 1.5em;
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+		z-index: 5;
+
+		.icon {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
+	
+	.map {
+		width: 100%;
+		height: 15%;
+		overflow: hidden;
+		opacity: 0.5;
+	}
+
+	.info {
+		width: 100%;
+		height: max-content;
+		padding: 1.5em;
+		display: flex;
+		flex-direction: column;
+		gap: 1em;
+
+		.name {
+			font-size: 2em;
+			display: flex;
+			align-items: flex-start;
+			gap: 0.5em;
+
+			.icon {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding-block: 0.1em;
+			}
+		}
+
+		.bottom {
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			flex: 1;
+			gap: 0.5em;
+
+			.rating {
+				display: flex;
+				gap: 0.5em;
+				align-items: center;
+				flex: 1;
+				color: var(--tx-color-op-2);
+
+				.icon {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+
+				.bar {
+					flex: 1;
+					height: 0.5em;
+					background-color: var(--tx-color-op);
+					overflow: hidden;
+					clip-path: polygon(0.5em 0, 100% 0, calc(100% - 0.5em) 100%, 0 100%);
+
+					.fill {
+						background-color: var(--ac-color);
+						height: 100%;
+						clip-path: polygon(0 0, 100% 0, calc(100% - 0.5em) 100%, 0 100%);
+					}
+				}
+			}
+
+			.type {
+				color: var(--tx-color-op-2);
+			}
+
+			button {
+				margin-top: 1em;
+				display: flex;
+				gap: 1em;
+				align-items: center;
+				padding: 0.5em 1em;
+				color: var(--pr-color);
+				background-color: var(--ac-color);
+				clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+
+				.icon {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+			}
+		}
+
+		.summary {
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			gap: 1.5em;
+			padding-block: 1em;
+
+			.item {
+				font-size: 1.2em;
+				display: flex;
+				gap: 1em;
+				align-items: center;
+
+				.icon {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					font-size: 1.2em;
+				}
+			}
+
+			.checks {
+				display: flex;
+				font-size: 1.2em;
+				gap: 1em;
+
+				.icon {
+					font-size: 1.2em;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+
+				.subItems {
+					display: flex;
+					gap: 1em;
+
+					.subItem {
+						display: flex;
+						gap: 0.5em;
+						align-items: center;
+
+						&.disabled {
+							color: var(--tx-color-op-2);
+						}
+
+						.icon {
+							font-size: 0.9em;
+							display: flex;
+							align-items: center;
+							justify-content: center;
+						}
+					}
+				}
+			}
+		}
+	}
+}

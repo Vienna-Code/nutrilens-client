@@ -1,43 +1,31 @@
 import { PiCaretLeft, PiFunnelBold, PiXBold } from 'react-icons/pi'
 import styles from './styles.module.scss'
-import { useLocation } from 'wouter'
-import { useEffect, useState, type ChangeEvent } from 'react'
+import { Link, useLocation } from 'wouter'
+import { useState, type ChangeEvent } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Checkbox, FormControlLabel, Slider } from '@mui/material'
 import './styles.scss'
+import Api from '../../utils/api'
 
 const Search = () => {
 	const [, navigate] = useLocation()
-	const [locations, setLocations] = useState<ComLocation[]>()
-	const [matches, setMatches] = useState<ComLocation[]>()
+	const [search, setSearch] = useState('')
+	const [searchCom, setSearchCom] = useState<Commerce[]>()
 	const [filters, setFilters] = useState({
-		range: [0, 1000],
+		range: [0, 2500],
 		aptFor: {
-			cel: false,
-			dia: false,
-			hip: false
+			celiac: false,
+			diabetic: false,
+			hypertensive: false
 		},
-		type: {
-			food: false,
-			drink: false
+		comType: {
+			kiosk: false,
+			supermarket: false,
+			restaurant: false
 		}
 	})
 	const [filtersActive, setFiltersActive] = useState(false)
-
-	useEffect(() => {
-		if (locations) return
-
-		fetch('/locations.json').then(res => res.json().then(json => {
-			if (!res.ok) throw new Error('File does not exist')
-
-			setLocations(json)
-		}))
-	}, [])
 	
-	const handleBack = () => {
-		navigate('/')
-	}
-
 	const handleApt = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, checked } = e.currentTarget
 
@@ -50,41 +38,57 @@ const Search = () => {
 	const handleType = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, checked } = e.currentTarget
 
-		setFilters(prev => ({ ...prev, type: {
-			...prev.type,
+		setFilters(prev => ({ ...prev, comType: {
+			...prev.comType,
 			[name]: checked
 		} }))
 	}
 
+	const searchWithOptions = (value: string) => {
+		if (value === '') return
+		
+		Api.getCommerces({
+			name: value,
+			minPrice: filters.range[0],
+			maxPrice: filters.range[1],
+			restrictions: Object.values(filters.aptFor).every(x => !x) ? undefined : Object.entries(filters.aptFor).filter(x => x[1]).map(x => x[0]) as ('celiac'|'diabetic'|'hypertensive')[],
+			commerceTypes: Object.values(filters.comType).every(x => !x) ? undefined : Object.entries(filters.comType).filter(x => x[1]).map(x => x[0]) as ('kiosk'|'supermarket'|'restaurant')[],
+			unverified: true
+		}).then(data => setSearchCom(data.data))
+	}
+
 	let timer: ReturnType<typeof setTimeout>
 	const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-		if (!locations) return
-		
 		clearTimeout(timer)
 		const { value } = e.currentTarget
+		setSearch(value)
 
 		timer = setTimeout(() => {
-			const matchLocations = locations.filter(x => value == '' ? false : x.name.toLowerCase().includes(value.toLowerCase()))
-			
-			setMatches(matchLocations)
+			searchWithOptions(value)
 		}, 1500)
+	}
+
+	const toggleFilters = () => {
+		if (filtersActive) searchWithOptions(search)
+		
+		setFiltersActive(!filtersActive)
 	}
 
 	const sxCheck = { color: 'var(--ac-color)', '&.Mui-checked': { color: 'var(--ac-color)' } }
 	
 	return (
 		<div className={styles.search}>
-			<div className={styles.back} onClick={handleBack}>
+			<Link to='/' className={styles.back}>
 				<div className={styles.icon}>
 					<PiCaretLeft />
 				</div>
 				Atrás
-			</div>
+			</Link>
 			<div className={styles.searchBar}>
 				<div className={styles.bar}>
 					<input type="text" onChange={handleSearch} placeholder='Buscar comercios o productos...' />
 				</div>
-				<button onClick={() => setFiltersActive(!filtersActive)} className={filtersActive ? styles.active : ''}>
+				<button onClick={() => toggleFilters()} className={filtersActive ? styles.active : ''}>
 					{filtersActive ? <PiXBold /> : <PiFunnelBold />}
 				</button>
 			</div>
@@ -106,36 +110,37 @@ const Search = () => {
 								Rango de precio
 								<span>${filters.range[0]} - ${filters.range[1]}</span>
 								<div className={styles.range}>
-									<Slider value={filters.range} onChange={(_e, newValue) => setFilters(prev => ({ ...prev, range: newValue }))} valueLabelDisplay='auto' min={0} max={1000} className={styles.slider} />
+									<Slider value={filters.range} onChange={(_e, newValue) => setFilters(prev => ({ ...prev, range: newValue }))} valueLabelDisplay='auto' min={0} max={2500} className={styles.slider} />
 								</div>
 							</div>
 							<div className={styles.aptFor}>
 								Apto para
 								<div className={styles.fields}>
-									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.aptFor.cel} onChange={handleApt} name='cel' />} label="Celíacos" />
-									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.aptFor.dia} onChange={handleApt} name='dia' />} label="Diabéticos" />
-									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.aptFor.hip} onChange={handleApt} name='hip' />} label="Hipertensos" />
+									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.aptFor.celiac} onChange={handleApt} name='celiac' />} label="Celíacos" />
+									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.aptFor.diabetic} onChange={handleApt} name='diabetic' />} label="Diabéticos" />
+									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.aptFor.hypertensive} onChange={handleApt} name='hypertensive' />} label="Hipertensos" />
 								</div>
 							</div>
 							<div className={styles.type}>
-								Tipo de alimento
+								Tipo comercio
 								<div className={styles.fields}>
-									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.type.food} onChange={handleType} name='food' />} label="Comida" />
-									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.type.drink} onChange={handleType} name='drink' />} label="Bebida" />
+									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.comType.kiosk} onChange={handleType} name='kiosk' />} label="Kiosco" />
+									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.comType.supermarket} onChange={handleType} name='supermarket' />} label="Supermercado" />
+									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.comType.restaurant} onChange={handleType} name='restaurant' />} label="Restaurante" />
 								</div>
 							</div>
 						</motion.div>
-					: matches && matches.length > 0 ?
+					: searchCom && searchCom.length > 0 ?
 						<motion.div className={styles.results} initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} key={'results'}>
 							<div className={styles.section}>
 								Lugares más cercanos
 								<div className={styles.locations}>
 									<AnimatePresence>
-										{matches && matches.sort((a, b) => a.distance - b.distance).map(({ id, name, distance }) => {
+										{searchCom && searchCom.sort().map(({ id, name }) => {
 											const handleClick = () => {
-												navigate(`/location/${id}`)
+												navigate(`/commerce/${id}`)
 											}
-											const parseDistance = distance >= 1000 ? `${distance / 1000}km` : `${distance}m`
+											// const parseDistance = distance >= 1000 ? `${distance / 1000}km` : `${distance}m`
 											
 											return (
 												<motion.button className={styles.location} key={id} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ opacity: 0 }} onClick={handleClick}>
@@ -144,33 +149,7 @@ const Search = () => {
 													</div>
 													•
 													<div className={styles.distance}>
-														{parseDistance}
-													</div>
-												</motion.button>
-											)
-										})}
-									</AnimatePresence>
-								</div>
-							</div>
-							<div className={styles.section}>
-								Lugares más populares
-								<div className={styles.locations}>
-									<AnimatePresence>
-										{matches && matches.map(({ id, name, distance }) => {
-											const handleClick = () => {
-												navigate(`/location/${id}`)
-											}
-											
-											const parseDistance = distance >= 1000 ? `${distance / 1000}km` : `${distance}m`
-											
-											return (
-												<motion.button className={styles.location} key={id} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ opacity: 0 }} onClick={handleClick}>
-													<div className={styles.name}>
-														{name}
-													</div>
-													•
-													<div className={styles.distance}>
-														{parseDistance}
+														{/* {parseDistance} */}
 													</div>
 												</motion.button>
 											)

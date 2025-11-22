@@ -1,17 +1,32 @@
 type User = undefined | null | 'guest' | {
 	id: string,
 	username: string,
-	pfp: string,
-	rank: {
-		points: number,
-		name: string
-	}
+	email: string,
+	profile_picture: string|null,
+	points: number,
+	roles: ('ROLE_USER'|'ROLE_ADMIN')[],
+	alimentaryRestrictions: string[],
+	createdAt: string
 }
 
-type ComLocation = {
-	id: string
-	name: string
-	distance: number
-	rating: number
-	coords: [number, number]
+type Commerce = {
+	id: string,
+	name: string,
+	type: 'restaurant'|'kiosk'|'supermarket',
+	address: number,
+	verified: boolean,
+	contactInfo: {
+		number: string,
+		email: string
+	},
+	commerceSchedules: {
+		closesAt: string,
+		opensAt: string,
+		weekday: number
+	}[],
+	positiveReviews: number,
+	totalReviews: number,
+	paymentMethods: ('efectivo'|'credito'|'debito')[],
+	coordsLat: number,
+	coordsLon: number
 }

@@ -6,6 +6,8 @@
 	--tx-color: #f0f0f0;
 	--ac-color-op: #3b9c6a80;
 	--tx-color-op: #f0f0f02d;
+	--tx-color-op-2: #f0f0f080;
+	--er-color: #9c3b43;
 }
 
 *,
@@ -29,4 +31,25 @@ input, button, select {
 	font-family: 'Signika', sans-serif;
 	font-weight: 400;
 	font-size: 1em;
+}
+
+a {
+	color: var(--ac-color);
+}
+
+.tippy-box[data-inertia][data-state='visible'] {
+	transition-timing-function: cubic-bezier(0.77,0,0.18,1);
+}
+
+.tippy-content {
+	font-size: 1.2em;
+	padding: 0.5em 1em;
+}
+
+.tippy-box {
+	background-color: var(--ac-color);
+}
+
+.tippy-arrow {
+	color: var(--ac-color);
 }
