@@ -1,0 +1,78 @@
+.dashboard {
+	width: 100%;
+	min-height: 100dvh;
+	padding: 1.5em;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5em;
+
+	a {
+		display: flex;
+		gap: 0.5em;
+		align-items: center;
+		color: var(--tx-color );
+
+		.icon {
+			display: flex;
+			align-items: center;
+		}
+	}
+
+	.options {
+		width: 100%;
+		height: max-content;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1em;
+
+		.reports {
+			grid-column: span 2;
+			width: 100%;
+			background-color: var(--tx-color-op);
+			height: max-content;
+		}
+
+		.posts {
+			grid-column: span 2;
+		}
+
+		.commerces, .products, .posts {
+			width: 100%;
+			background-color: var(--tx-color-op);
+			height: max-content;
+			display: flex;
+			flex-direction: column;
+			gap: 1em;
+			padding: 1em;
+			clip-path: polygon(1em 0, 100% 0, 100% calc(100% - 1em), calc(100% - 1em) 100%, 0 100%, 0 1em);
+
+			.count {
+				font-size: 2em;
+				display: flex;
+				flex-direction: column;
+
+				span {
+					font-size: 0.6em;
+				}
+			}
+
+			button {
+				display: flex;
+				gap: 0.5em;
+				font-size: 1em;
+				align-items: center;
+				padding: 0.5em 1em;
+				color: var(--pr-color);
+				background-color: var(--ac-color);
+				clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+				flex: 1;
+		
+				.icon {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+			}
+		}
+	}
+}

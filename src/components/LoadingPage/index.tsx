@@ -1,8 +1,8 @@
 import styles from './styles.module.scss'
 
-const LoadingPage = () => {
+const LoadingPage = ({ absolute }: { absolute?: boolean }) => {
 	return (
-		<div className={styles.loadingPage}>
+		<div className={`${styles.loadingPage} ${absolute ? styles.absolute : ''}`}>
 			<div className={styles.loader}></div>
 		</div>
 	)

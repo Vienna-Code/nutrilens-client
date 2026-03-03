@@ -11,7 +11,9 @@ interface State {
 	located: boolean,
 	setLocated: (located: boolean) => void,
 	userLocation?: LatLng,
-	setUserLocation: (userLocation: LatLng) => void
+	setUserLocation: (userLocation: LatLng) => void,
+	selectedCommerce?: string,
+	setSelectedCommerce: (id?: string) => void
 }
 
 export const useAllStore = create<State>()((set) => ({
@@ -34,5 +36,9 @@ export const useAllStore = create<State>()((set) => ({
 	userLocation: undefined,
 	setUserLocation: (userLocation) => {
 		set({ userLocation })
+	},
+	selectedCommerce: undefined,
+	setSelectedCommerce: (selectedCommerce) => {
+		set({ selectedCommerce })
 	}
 }))

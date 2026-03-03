@@ -1,0 +1,42 @@
+.community {
+	padding: 1.5em;
+	width: 100%;
+	min-height: 100dvh;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5em;
+	position: relative;
+
+	a {
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+		color: var(--tx-color);
+
+		.icon {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
+
+	button.add {
+		z-index: 50;
+		position: fixed;
+		right: 1em;
+		bottom: 1em;
+		background-color: var(--ac-color);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1.3em;
+		padding: 0.7em;
+		clip-path: polygon(30% 0, 100% 0, 100% 70%, 70% 100%, 0 100%, 0 30%);
+		cursor: pointer;
+	}
+
+	h3 {
+		margin-top: 1em;
+		font-size: 1.2em;
+	}
+}

@@ -1,0 +1,235 @@
+.summary {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5em;
+	padding-block: 1em;
+	
+	.verifyModal {
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		background-color: var(--pr-color-op);
+		z-index: 10;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 1.5em;
+
+		.modal {
+			width: 100%;
+			height: max-content;
+			padding: 2em;
+			background-color: var(--pr-color);
+			border: 3px solid var(--ac-color);
+			display: flex;
+			flex-direction: column;
+			gap: 1.5em;
+
+			.text {
+				display: flex;
+				align-items: flex-start;
+				gap: 1em;
+
+				.icon {
+					font-size: 2em;
+				}
+
+				p {
+					font-size: 1.2em;
+					text-wrap: pretty;
+				}
+			}
+
+			.actions {
+				width: 100%;
+				display: flex;
+				gap: 1em;
+
+				button {
+					flex: 1;
+					gap: 0.5em;
+					font-size: 1.2em;
+					padding: 0.5em 1em;
+					color: var(--pr-color);
+					background-color: var(--ac-color);
+					clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+
+					&.disabled {
+						cursor: not-allowed;
+						opacity: 0.5;
+					}
+				}
+			}
+		}
+	}
+
+	button {
+		display: flex;
+		gap: 0.5em;
+		font-size: 1.2em;
+		align-items: center;
+		padding: 0.5em 1em;
+		color: var(--pr-color);
+		background-color: var(--ac-color);
+		clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+		flex: 1;
+
+		.icon {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
+
+	.actions {
+		display: flex;
+		justify-content: space-between;
+		gap: 1em;
+	}
+
+	.item {
+		font-size: 1.2em;
+		display: flex;
+		gap: 1em;
+		align-items: center;
+
+		.icon {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 1.2em;
+		}
+	}
+
+	.checks {
+		display: flex;
+		font-size: 1.2em;
+		gap: 1em;
+
+		.icon {
+			font-size: 1.2em;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.subItems {
+			display: flex;
+			gap: 1em;
+
+			.subItem {
+				display: flex;
+				gap: 0.5em;
+				align-items: center;
+
+				&.disabled {
+					color: var(--tx-color-op-2);
+				}
+
+				.icon {
+					font-size: 0.9em;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+			}
+		}
+	}
+
+	.details {
+		width: 100%;
+		display: flex;
+		gap: 1em;
+		font-size: 1.2em;
+		align-items: flex-start;
+
+		.icon {
+			font-size: 1.2em;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		details {
+			border: none;
+			outline: none;
+			display: flex;
+			flex-direction: column;
+			gap: 1em;
+
+			summary {
+				border: none;
+				outline: none;
+				display: flex;
+				gap: 2em;
+				justify-content: space-between;
+				align-items: center;
+				position: relative;
+				padding-left: 1.5em;
+
+				.arrow {
+					position: absolute;
+					left: 0;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+
+				.dayName {
+					font-weight: 700;
+				}
+			}
+
+			.days {
+				display: flex;
+				flex-direction: column;
+				gap: 1em;
+				padding-left: 1.5em;
+
+				.day {
+					display: flex;
+					gap: 2em;
+					justify-content: space-between;
+				}
+			}
+		}
+	}
+
+	.images {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5em;
+		white-space: nowrap;
+
+		.list {
+			display: flex;
+			height: max-content;
+			padding-block: 0.5em;
+			gap: 1em;
+			flex-wrap: nowrap;
+			white-space: nowrap;
+			overflow-x: auto;
+
+			.image {
+				height: 6em;
+				width: 6em;
+				flex-shrink: 0;
+
+				img {
+					width: 100%;
+					height: 100%;
+					object-fit: cover;
+				}
+			}
+		}
+	}
+
+	.empty {
+		font-style: italic;
+		color: var(--tx-color-op-2);
+	}
+}

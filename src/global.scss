@@ -2,6 +2,9 @@
 
 :root {
 	--pr-color: #1c1c1c;
+	--pr-color-op: #1c1c1c2d;
+	--pr-color-op-2: #1c1c1c80;
+	--pr-color-tp: #1c1c1c00;
 	--ac-color: #3b9c6a;
 	--tx-color: #f0f0f0;
 	--ac-color-op: #3b9c6a80;
@@ -25,7 +28,7 @@ body {
 	color: var(--tx-color);
 }
 
-input, button, select {
+input, button, select, textarea {
 	border: none;
 	outline: none;
 	font-family: 'Signika', sans-serif;
@@ -48,6 +51,7 @@ a {
 
 .tippy-box {
 	background-color: var(--ac-color);
+	border: 3px solid var(--pr-color);
 }
 
 .tippy-arrow {

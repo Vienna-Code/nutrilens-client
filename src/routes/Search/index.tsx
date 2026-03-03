@@ -1,7 +1,7 @@
-import { PiCaretLeft, PiFunnelBold, PiXBold } from 'react-icons/pi'
+import { PiCaretLeft, PiCaretLeftBold, PiFunnelBold, PiXBold } from 'react-icons/pi'
 import styles from './styles.module.scss'
 import { Link, useLocation } from 'wouter'
-import { useState, type ChangeEvent } from 'react'
+import { useEffect, useState, type ChangeEvent } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Checkbox, FormControlLabel, Slider } from '@mui/material'
 import './styles.scss'
@@ -11,8 +11,9 @@ const Search = () => {
 	const [, navigate] = useLocation()
 	const [search, setSearch] = useState('')
 	const [searchCom, setSearchCom] = useState<Commerce[]>()
+	const [searchProd, setSearchProd] = useState<Product[]>()
 	const [filters, setFilters] = useState({
-		range: [0, 2500],
+		range: [0, 9999],
 		aptFor: {
 			celiac: false,
 			diabetic: false,
@@ -21,27 +22,30 @@ const Search = () => {
 		comType: {
 			kiosk: false,
 			supermarket: false,
+			bakery: false,
 			restaurant: false
-		}
+		},
+		category: {
+			food: false,
+			drink: false
+		},
+		orderBy: ''
 	})
 	const [filtersActive, setFiltersActive] = useState(false)
-	
-	const handleApt = (e: ChangeEvent<HTMLInputElement>) => {
+
+	const handleCheck = (e: ChangeEvent<HTMLInputElement>, type: 'aptFor'|'comType'|'category') => {
 		const { name, checked } = e.currentTarget
 
-		setFilters(prev => ({ ...prev, aptFor: {
-			...prev.aptFor,
+		setFilters(prev => ({ ...prev, [type]: {
+			...prev[type],
 			[name]: checked
 		} }))
 	}
 
-	const handleType = (e: ChangeEvent<HTMLInputElement>) => {
-		const { name, checked } = e.currentTarget
+	const handleOrder = (e: ChangeEvent<HTMLSelectElement>) => {
+		const { value } = e.currentTarget
 
-		setFilters(prev => ({ ...prev, comType: {
-			...prev.comType,
-			[name]: checked
-		} }))
+		setFilters(prev => ({ ...prev, orderBy: value }))
 	}
 
 	const searchWithOptions = (value: string) => {
@@ -49,23 +53,35 @@ const Search = () => {
 		
 		Api.getCommerces({
 			name: value,
+			orderBy: filters.orderBy,
 			minPrice: filters.range[0],
 			maxPrice: filters.range[1],
 			restrictions: Object.values(filters.aptFor).every(x => !x) ? undefined : Object.entries(filters.aptFor).filter(x => x[1]).map(x => x[0]) as ('celiac'|'diabetic'|'hypertensive')[],
 			commerceTypes: Object.values(filters.comType).every(x => !x) ? undefined : Object.entries(filters.comType).filter(x => x[1]).map(x => x[0]) as ('kiosk'|'supermarket'|'restaurant')[],
 			unverified: true
 		}).then(data => setSearchCom(data.data))
+
+		Api.getSearchProducts({
+			name: value,
+			minPrice: filters.range[0],
+			maxPrice: filters.range[1],
+			restrictions: Object.values(filters.aptFor).every(x => !x) ? undefined : Object.entries(filters.aptFor).filter(x => x[1]).map(x => x[0]) as ('celiac'|'diabetic'|'hypertensive')[],
+			category: Object.values(filters.category).every(x => !x) ? undefined : Object.entries(filters.category).filter(x => x[1]).map(x => x[0]) as ('food'|'drink')[],
+			unverified: true
+		}).then(setSearchProd)
 	}
 
-	let timer: ReturnType<typeof setTimeout>
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			searchWithOptions(search)
+		}, 1500)
+
+		return () => clearTimeout(timer)
+	}, [search])
+
 	const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-		clearTimeout(timer)
 		const { value } = e.currentTarget
 		setSearch(value)
-
-		timer = setTimeout(() => {
-			searchWithOptions(value)
-		}, 1500)
 	}
 
 	const toggleFilters = () => {
@@ -99,10 +115,17 @@ const Search = () => {
 							<div className={styles.sort}>
 								Ordenar por
 								<div className={styles.select}>
-									<select defaultValue="">
+									<div className={styles.arrow}>
+										<PiCaretLeftBold />
+									</div>
+									<select onChange={handleOrder} value={filters.orderBy}>
 										<option value="" disabled>Seleccione una opción</option>
-										<option value="nameasc">Nombre A-Z</option>
-										<option value="namedesc">Nombre Z-A</option>
+										<option value="name_asc">Nombre A-Z</option>
+										<option value="name_desc">Nombre Z-A</option>
+										<option value="rating_asc">Menor calificación</option>
+										<option value="rating_desc">Mayor calificación</option>
+										<option value="price_asc">Menor precio</option>
+										<option value="price_desc">Mayor precio</option>
 									</select>
 								</div>
 							</div>
@@ -116,50 +139,86 @@ const Search = () => {
 							<div className={styles.aptFor}>
 								Apto para
 								<div className={styles.fields}>
-									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.aptFor.celiac} onChange={handleApt} name='celiac' />} label="Celíacos" />
-									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.aptFor.diabetic} onChange={handleApt} name='diabetic' />} label="Diabéticos" />
-									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.aptFor.hypertensive} onChange={handleApt} name='hypertensive' />} label="Hipertensos" />
+									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.aptFor.celiac} onChange={e => handleCheck(e, 'aptFor')} name='celiac' />} label="Celíacos" />
+									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.aptFor.diabetic} onChange={e => handleCheck(e, 'aptFor')} name='diabetic' />} label="Diabéticos" />
+									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.aptFor.hypertensive} onChange={e => handleCheck(e, 'aptFor')} name='hypertensive' />} label="Hipertensos" />
 								</div>
 							</div>
 							<div className={styles.type}>
 								Tipo comercio
 								<div className={styles.fields}>
-									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.comType.kiosk} onChange={handleType} name='kiosk' />} label="Kiosco" />
-									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.comType.supermarket} onChange={handleType} name='supermarket' />} label="Supermercado" />
-									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.comType.restaurant} onChange={handleType} name='restaurant' />} label="Restaurante" />
+									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.comType.kiosk} onChange={e => handleCheck(e, 'comType')} name='kiosk' />} label="Kiosco" />
+									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.comType.supermarket} onChange={e => handleCheck(e, 'comType')} name='supermarket' />} label="Supermercado" />
+									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.comType.bakery} onChange={e => handleCheck(e, 'comType')} name='bakery' />} label="Panadería" />
+									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.comType.restaurant} onChange={e => handleCheck(e, 'comType')} name='restaurant' />} label="Restaurante" />
+								</div>
+							</div>
+							<div className={styles.type}>
+								Tipo producto
+								<div className={styles.fields}>
+									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.category.food} onChange={e => handleCheck(e, 'category')} name='food' />} label="Comida" />
+									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.category.drink} onChange={e => handleCheck(e, 'category')} name='drink' />} label="Bebida" />
 								</div>
 							</div>
 						</motion.div>
-					: searchCom && searchCom.length > 0 ?
+					: searchCom && searchCom.length > 0 || searchProd && searchProd.length > 0 ?
 						<motion.div className={styles.results} initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} key={'results'}>
-							<div className={styles.section}>
-								Lugares más cercanos
-								<div className={styles.locations}>
-									<AnimatePresence>
-										{searchCom && searchCom.sort().map(({ id, name }) => {
-											const handleClick = () => {
-												navigate(`/commerce/${id}`)
-											}
-											// const parseDistance = distance >= 1000 ? `${distance / 1000}km` : `${distance}m`
-											
-											return (
-												<motion.button className={styles.location} key={id} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ opacity: 0 }} onClick={handleClick}>
-													<div className={styles.name}>
-														{name}
-													</div>
-													•
-													<div className={styles.distance}>
-														{/* {parseDistance} */}
-													</div>
-												</motion.button>
-											)
-										})}
-									</AnimatePresence>
+							{searchProd && searchProd.length > 0 &&
+								<div className={styles.section}>
+									Productos
+									<div className={styles.products}>
+										<AnimatePresence>
+											{searchProd && searchProd.map(({ id, commerce: { id: cid, name: cname }, name, brand }) => {
+												const handleClick = () => {
+													navigate(`~/commerce/${cid}/products/${id}`)
+												}
+												// const parseDistance = distance >= 1000 ? `${distance / 1000}km` : `${distance}m`
+												
+												return (
+													<motion.button className={styles.product} key={id} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ opacity: 0 }} onClick={handleClick}>
+														<div className={styles.name}>
+															{name}, {brand}
+														</div>
+														<div className={styles.commerceName}>
+															{cname}
+														</div>
+													</motion.button>
+												)
+											})}
+										</AnimatePresence>
+									</div>
 								</div>
-							</div>
+							}
+							{searchCom && searchCom.length > 0 &&
+								<div className={styles.section}>
+									Lugares más cercanos
+									<div className={styles.locations}>
+										<AnimatePresence>
+											{searchCom && searchCom.map(({ id, name }) => {
+												const handleClick = () => {
+													navigate(`~/commerce/${id}`)
+												}
+												// const parseDistance = distance >= 1000 ? `${distance / 1000}km` : `${distance}m`
+												
+												return (
+													<motion.button className={styles.location} key={id} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ opacity: 0 }} onClick={handleClick}>
+														<div className={styles.name}>
+															{name}
+														</div>
+														•
+														<div className={styles.distance}>
+															{/* {parseDistance} */}
+														</div>
+													</motion.button>
+												)
+											})}
+										</AnimatePresence>
+									</div>
+								</div>
+							}
 						</motion.div>
 					:
-						<div className={styles.notFound}>No se encontraron comercios</div>
+						<div className={styles.notFound}>No se encontraron comercios o productos</div>
 					}
 				</AnimatePresence>
 			</div>

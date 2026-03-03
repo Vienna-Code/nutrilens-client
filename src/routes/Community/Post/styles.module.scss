@@ -1,0 +1,278 @@
+.post {
+	display: flex;
+	flex-direction: column;
+	gap: 2em;
+	padding: 1.5em;
+
+	a {
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+		color: var(--tx-color);
+
+		.icon {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
+
+	.fullPost {
+		width: 100%;
+		height: max-content;
+		display: flex;
+		flex-direction: column;
+		gap: 1em;
+
+		.top {
+			display: flex;
+			gap: 1em;
+			width: 100%;
+			align-items: center;
+	
+			.profilePic {
+				width: 2.7em;
+				height: 2.7em;
+				clip-path: polygon(30% 0, 100% 0, 100% 70%, 70% 100%, 0 100%, 0 30%);
+	
+				img {
+					width: 100%;
+					height: 100%;
+					object-fit: cover;
+				}
+			}
+	
+			.info {
+				display: flex;
+				flex-direction: column;
+	
+				.name {
+					font-size: 1.2em;
+					display: flex;
+					gap: 0.5em;
+					align-items: center;
+	
+					.badge {
+						width: 1.5em;
+						height: 1.5em;
+	
+						img {
+							width: 100%;
+							height: 100%;
+							object-fit: cover;
+						}
+					}
+				}
+	
+				.date {
+					display: flex;
+					align-items: center;
+					gap: 0.5em;
+					font-size: 0.8em;
+					color: var(--tx-color-op-2);
+	
+					.icon {
+						display: flex;
+						align-items: center;
+						justify-content: center;
+					}
+				}
+			}
+		}
+	
+		.content {
+			display: flex;
+			flex-direction: column;
+			gap: 0.5em;
+	
+			.title {
+				font-size: 1.2em;
+			}
+		}
+
+		.attachments {
+			width: 100%;
+			height: max-content;
+			display: grid;
+			grid-template-columns: repeat(6, 1fr);
+			grid-auto-rows: 3.5em;
+			gap: 0.5em;
+
+			.attachment {
+				width: 100%;
+				height: 100%;
+				border: 3px solid var(--ac-color);
+
+				&.hfull {
+					grid-row: span 4;
+				}
+
+				&.hhalf {
+					grid-row: span 2;
+				}
+
+				&.hthird {
+					grid-row: span 1;
+				}
+
+				&.wfull {
+					grid-column: span 6;
+				}
+
+				&.whalf {
+					grid-column: span 3;
+				}
+
+				&.wthird {
+					grid-column: span 2;
+				}
+
+				img {
+					width: 100%;
+					height: 100%;
+					object-fit: cover;
+				}
+			}
+		}
+	
+		.actions {
+			display: flex;
+			width: 100%;
+			gap: 1em;
+			color: var(--tx-color-op-2);
+			align-items: center;
+	
+			.likes {
+				display: flex;
+				gap: 1em;
+				align-items: center;
+	
+				button {
+					padding: 0.5em;
+					clip-path: none;
+					background-color: transparent;
+					color: var(--ac-color);
+					display: flex;
+					align-items: center;
+
+					&:disabled {
+						opacity: 0.5;
+						cursor: not-allowed;
+					}
+
+					.icon {
+						display: flex;
+						align-items: center;
+					}
+				}
+	
+				span {
+					width: 4ch;
+					text-align: center;
+				}
+			}
+
+			.comments {
+				display: flex;
+				flex-direction: initial;
+				gap: 0.5em;
+				align-items: center;
+				background-color: transparent;
+				color: var(--tx-color-op-2);
+				width: max-content;
+
+				.icon {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+			}
+
+			a {
+				margin-left: auto;
+			}
+		}
+
+		.comments {
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+			gap: 2em;
+
+			form {
+				position: relative;
+		
+				button {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					background-color: var(--ac-color) !important;
+					padding: 0.4em 0.7em;
+					color: var(--pr-color) !important;
+					position: absolute;
+					bottom: 0;
+					right: 0;
+					translate: 25% 35%;
+				}
+			}
+	
+			fieldset {
+				border: none;
+				outline: none;
+				position: relative;
+				display: flex;
+				align-items: center;
+				margin-block: 0.7em 0.5em;
+	
+				label {
+					position: absolute;
+					top: 50%;
+					left: 0.5em;
+					translate: 0 -50%;
+					padding-inline: 0.5em;
+					background-color: var(--pr-color);
+					font-size: 1em;
+					color: var(--tx-color-op-2);
+					transition: 0.3s cubic-bezier(0.65,0.05,0.36,1);
+					z-index: 5;
+	
+					&:has(+ textarea:focus), &:has(+ textarea:not(:placeholder-shown)) {
+						font-size: 0.9em;
+						top: 0;
+					}
+				}
+	
+				textarea {
+					width: 100%;
+					max-width: 100%;
+					min-width: 100%;
+					font-size: 1em;
+					padding: 0.7em;	
+					background-color: transparent !important;
+					color: var(--tx-color);
+					border: 3px solid var(--tx-color-op);
+					transition: border 0.2s ease-out;
+					field-sizing: content;
+					resize: none;
+					min-height: 3em;
+					max-height: 10em;
+					overflow-wrap: anywhere;
+		
+					&:disabled {
+						opacity: 0.5;
+					}
+		
+					&:focus {
+						border: 3px solid var(--ac-color);
+					}
+				}
+			}
+
+			.list {
+				display: flex;
+				flex-direction: column;
+				gap: 2em;
+			}
+		}
+	}
+}

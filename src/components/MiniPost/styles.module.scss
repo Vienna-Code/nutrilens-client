@@ -1,0 +1,158 @@
+.miniPost {
+	width: 100%;
+	height: max-content;
+	display: flex;
+	flex-direction: column;
+	gap: 1em;
+	border-bottom: 1px solid var(--tx-color-op-2);
+	padding-block: 1.5em;
+	position: relative;
+	
+	&:hover {
+		.interactiveBg {
+			background-color: var(--tx-color-op);
+		}
+	}
+
+	&:last-child {
+		border: none;
+	}
+
+	.interactiveBg {
+		position: absolute;
+		width: calc(100% + 3em);
+		height: 100%;
+		z-index: -1;
+		background-color: var(--pr-color);
+		top: 0;
+		left:-1.5em;
+		transition: 0.2s ease-out;
+	}
+
+	.top {
+		display: flex;
+		gap: 1em;
+		width: 100%;
+		align-items: center;
+
+		.profilePic {
+			width: 2.7em;
+			height: 2.7em;
+			clip-path: polygon(30% 0, 100% 0, 100% 70%, 70% 100%, 0 100%, 0 30%);
+
+			img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+		}
+
+		.info {
+			display: flex;
+			flex-direction: column;
+
+			.name {
+				font-size: 1.2em;
+				display: flex;
+				gap: 0.5em;
+				align-items: center;
+
+				.badge {
+					width: 1.5em;
+					height: 1.5em;
+
+					img {
+						width: 100%;
+						height: 100%;
+						object-fit: cover;
+					}
+				}
+			}
+
+			.date {
+				display: flex;
+				align-items: center;
+				gap: 0.5em;
+				font-size: 0.8em;
+				color: var(--tx-color-op-2);
+
+				.icon {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+			}
+		}
+	}
+
+	.content {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5em;
+
+		.title {
+			font-size: 1.2em;
+		}
+
+		.attachments {
+			display: flex;
+			align-items: center;
+			gap: 0.5em;
+			margin-top: 1em;
+			color: var(--tx-color-op-2);
+
+			.icon {
+				display: flex;
+				align-items: center;
+				font-size: 1.2em;
+			}
+		}
+	}
+
+	.actions {
+		display: flex;
+		width: 100%;
+		gap: 1em;
+		color: var(--tx-color-op-2);
+		align-items: center;
+
+		.likes {
+			display: flex;
+			gap: 1em;
+			align-items: center;
+
+			button {
+				padding: 0.5em;
+				clip-path: none;
+				background-color: transparent;
+				color: var(--ac-color);
+
+				&:disabled {
+					opacity: 0.5;
+					cursor: not-allowed;
+				}
+			}
+
+			span {
+				width: 4ch;
+				text-align: center;
+			}
+		}
+
+		.comments {
+			display: flex;
+			flex-direction: initial;
+			gap: 0.5em;
+			align-items: center;
+			background-color: transparent;
+			color: var(--tx-color-op-2);
+			width: max-content;
+
+			.icon {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+		}
+	}
+}

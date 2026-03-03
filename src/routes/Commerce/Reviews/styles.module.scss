@@ -1,0 +1,91 @@
+.reviews {
+	width: 100%;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 1em;
+	
+	.summary {
+		width: 100%;
+		display: flex;
+		padding-block: 1em;
+		gap: 1em;
+		align-items: center;
+
+		.rating {
+			display: flex;
+			font-size: 2em;
+			gap: 0.5em;
+			
+			.icon {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+		}
+
+		.separator {
+			font-size: 1.5em;
+		}
+
+		.details {
+			font-size: 1.2em;
+		}
+	}
+
+	.userReview {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 1em;
+
+		.title {
+			font-size: 1.2em;
+			display: flex;
+			align-items: center;
+			gap: 0.5em;
+
+			.icon {
+				display: flex;
+				align-items: center;
+			}
+		}
+	}
+
+	button {
+		display: flex;
+		gap: 0.5em;
+		align-items: center;
+		font-size: 1.2em;
+		padding: 0.5em 1em;
+		color: var(--pr-color);
+		background-color: var(--ac-color);
+		clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+
+		.icon {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
+
+	.reviewsList {
+		display: flex;
+		flex-direction: column;
+		padding-block: 1em;
+		gap: 1.5em;
+	}
+
+	.empty {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 1em;
+		padding-block: 1em;
+
+		span {
+			color: var(--tx-color-op-2);
+			font-size: 1.2em;
+		}
+	}
+}

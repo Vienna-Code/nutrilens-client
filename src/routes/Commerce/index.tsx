@@ -1,66 +1,89 @@
-import { useLocation, useParams } from 'wouter'
+import { Link, useParams } from 'wouter'
 import styles from './styles.module.scss'
 import { useEffect, useState } from 'react'
 import Map from '../../components/Map'
-import { PiCaretLeftBold, PiCheckBold, PiEnvelopeBold, PiMapPinBold, PiPathBold, PiPhoneBold, PiSealCheckBold, PiThumbsUpBold, PiWalletBold, PiXBold } from 'react-icons/pi'
+import { PiBreadBold, PiCaretLeftBold, PiFlagBannerBold, PiForkKnifeBold, PiSealBold, PiSealCheckBold, PiShoppingCartBold, PiStorefrontBold, PiThumbsUpBold } from 'react-icons/pi'
 import Api from '../../utils/api'
+import { motion } from 'framer-motion'
+import LoadingPage from '../../components/LoadingPage'
+import GeneralInfo from './GeneralInfo'
 import { useAllStore } from '../../store/useAllStore'
+import Tippy from '@tippyjs/react'
+import Reviews from './Reviews'
 
 const Commerce = () => {
 	const { id } = useParams()
-	const [, navigate] = useLocation()
+	const user = useAllStore(state => state.user)
 	const [commerce, setCommerce] = useState<Commerce|null>()
-	const userLocation = useAllStore(state => state.userLocation)
+	const [reviews, setReviews] = useState<Review[]>()
+	const [userReview, setUserReview] = useState<Review>()
+	const [tab, setTab] = useState(0)
+	const selectedCommerce = useAllStore(state => state.selectedCommerce)
 
 	useEffect(() => {
 		if (commerce !== undefined) return
 
 		Api.getCommerce(id as string)
 		.then(data => {
-			console.log(data.data)
 			setCommerce(data.data)
 		})
-	})
 
-	const handleRoute = () => {
-		if (!userLocation || !commerce) return
+		Api.getReviews(id as string)
+		.then(data => {
+			if (user === 'guest' || !user) return setReviews(data)
 
-		Api.traceRoute([userLocation.lng, userLocation.lat], [commerce.coordsLon, commerce.coordsLat], 'foot')
-	}
+			const findUserReview = data.find((x: Review) => x.user.id === user.id)
+			const parseReviews = findUserReview ? data.filter((x: Review) => x.user.id !== user.id) : data
+			setReviews(parseReviews)
+
+			if (findUserReview) setUserReview(findUserReview)
+		})
+	}, [])
 
 	const typeMap = {
-		'kiosk': 'Kiosco',
-		'supermarket': 'Supermercado',
-		'restaurant': 'Restaurante'
+		'kiosk': {
+			text: 'Kiosco',
+			icon: <PiStorefrontBold />
+		},
+		'restaurant': {
+			text: 'Restaurante',
+			icon: <PiForkKnifeBold />
+		},
+		'supermarket': {
+			text: 'Supermercado',
+			icon: <PiShoppingCartBold />
+		},
+		'bakery': {
+			text: 'Panadería',
+			icon: <PiBreadBold />
+		}
 	}
-
-	const paymentMap = [
-		{ name: 'efectivo', text: 'Efectivo' },
-		{ name: 'credito', text: 'Crédito' },
-		{ name: 'debito', text: 'Débito' }
-	]
 	
 	return (
 		<div className={styles.location}>
 			{commerce ?
 				<>
-					<div className={styles.back} onClick={() => navigate('/search')}>
+					<Link to={selectedCommerce ? '~/' : '~/search'} className={styles.back}>
 						<div className={styles.icon}>
 							<PiCaretLeftBold />
 						</div>
 						Atrás
-					</div>
+					</Link>
 					<div className={styles.map}>
-						<Map disableLocation markers={[{coords: [commerce.coordsLat, commerce.coordsLon], text: commerce.name}]} center={[commerce.coordsLat, commerce.coordsLon]} />
+						<Map disableLocation markers={[{coords: [commerce.coordsLat, commerce.coordsLon], text: commerce.name, type: commerce.type}]} center={[commerce.coordsLat, commerce.coordsLon]} />
 					</div>
 					<div className={styles.info}>
 						<div className={styles.name}>
 							{commerce.name}
-							{commerce.verified &&
-								<div className={styles.icon}>
-									<PiSealCheckBold />
+							<Tippy content={commerce.verified ? 'Comercio verificado' : 'Comercio no verificado'}>
+								<div className={`${styles.icon} ${commerce.verified ? styles.verified : ''}`}>
+									{commerce.verified ?
+										<PiSealCheckBold />
+									:
+										<PiSealBold />
+									}
 								</div>
-							}
+							</Tippy>
 						</div>
 						<div className={styles.bottom}>
 							<div className={styles.rating}>
@@ -81,55 +104,42 @@ const Commerce = () => {
 									</>
 								}
 							</div>
-							<div className={styles.type}>
-								{typeMap[commerce.type]}
-							</div>
-							<button className={styles.route} onClick={handleRoute}>
-								Cómo llegar
-								<div className={styles.icon}>
-									<PiPathBold />
+							<div className={styles.bottomInfo}>
+								<div className={styles.type}>
+									{typeMap[commerce.type].text}
+									<div className={styles.icon}>
+										{typeMap[commerce.type].icon}
+									</div>
 								</div>
-							</button>
-						</div>
-						<div className={styles.summary}>
-							<div className={styles.item}>
-								<div className={styles.icon}>
-									<PiMapPinBold />
-								</div>
-								{commerce.address}
-							</div>
-							<div className={styles.item}>
-								<div className={styles.icon}>
-									<PiPhoneBold />
-								</div>
-								{commerce.contactInfo.number}
-							</div>
-							<div className={styles.item}>
-								<div className={styles.icon}>
-									<PiEnvelopeBold />
-								</div>
-								{commerce.contactInfo.email}
-							</div>
-							<div className={styles.checks}>
-								<div className={styles.icon}>
-									<PiWalletBold />
-								</div>
-								<div className={styles.subItems}>
-									{paymentMap.map(({ name, text }) => (
-										<div className={`${styles.subItem} ${!commerce.paymentMethods.includes(name as 'credito'|'efectivo'|'debito') ? styles.disabled : ''}`} key={name}>
-											<div className={styles.icon}>
-												{commerce.paymentMethods.includes(name as 'credito'|'efectivo'|'debito') ? <PiCheckBold /> : <PiXBold />}
-											</div>
-											{text}
+								{user !== 'guest' &&
+									<Link to='/report'>
+										<div className={styles.icon}>
+											<PiFlagBannerBold />
 										</div>
-									))}
-								</div>
+										Reportar
+									</Link>
+								}
 							</div>
 						</div>
+						<div className={styles.tabs}>
+							<div className={styles.tab} onClick={() => setTab(0)}>
+								Información general
+								{tab === 0 && <motion.div layoutId='selectedTab' className={styles.selected}></motion.div>}
+							</div>
+							<div className={styles.tab} onClick={() => setTab(1)}>
+								Reseñas
+								{tab === 1 && <motion.div layoutId='selectedTab' className={styles.selected}></motion.div>}
+							</div>
+						</div>
+						{tab === 0 ?
+							<GeneralInfo commerce={commerce} />
+						:
+							reviews && <Reviews positiveReviews={commerce.positiveReviews} totalReviews={commerce.totalReviews} reviews={reviews} userReview={userReview} />
+						}
 					</div>
 				</>
 			:
-				'hola'
+				<LoadingPage />
 			}
 		</div>
 	)

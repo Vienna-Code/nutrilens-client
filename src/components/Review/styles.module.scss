@@ -1,0 +1,104 @@
+.review {
+	display: flex;
+	flex-direction: column;
+	gap: 1em;
+
+	.user {
+		display: flex;
+		gap: 1em;
+		
+		.profilePic {
+			height: 3em;
+			width: 3em;
+			overflow: hidden;
+			clip-path: polygon(30% 0, 100% 0, 100% 70%, 70% 100%, 0 100%, 0 30%);
+
+			img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+		}
+
+		.info {
+			display: flex;
+			flex-direction: column;
+			gap: 0.2em;
+
+			.name {
+				font-size: 1.2em;
+				display: flex;
+				gap: 0.5em;
+				align-items: center;
+
+				.badge {
+					width: 1.5em;
+					height: 1.5em;
+
+					img {
+						width: 100%;
+						height: 100%;
+						object-fit: cover;
+					}
+				}
+			}
+
+			.createdAt {
+				font-size: 0.9em;
+				color: var(--tx-color-op-2);
+				display: flex;
+				align-items: center;
+				gap: 0.5em;
+
+				.icon {
+					display: flex;
+					align-items: center;
+				}
+			}
+		}
+	}
+
+	.userRating {
+		display: flex;
+		gap: 0.5em;
+		color: var(--tx-color-op-2);
+
+		.icon {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
+
+	.content {
+		font-size: 1.2em;
+		overflow-wrap: anywhere;
+	}
+
+	.interactions {
+		display: flex;
+		gap: 1em;
+		align-items: center;
+
+		button {
+			padding: 0.5em;
+			clip-path: none;
+			background-color: transparent;
+			color: var(--ac-color);
+
+			&:disabled {
+				color: var(--tx-color);
+				cursor: not-allowed;
+
+				+ span {
+					text-align: left;
+				}
+			}
+		}
+
+		span {
+			width: 4ch;
+			text-align: center;
+		}
+	}
+}

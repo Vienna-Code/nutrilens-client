@@ -1,0 +1,102 @@
+.dropImage {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 1em;
+	height: max-content;
+
+	.dropArea {
+		width: 100%;
+		height: 10em;
+		border: 3px solid var(--tx-color-op);
+		padding: 1.5em;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 1.5em;
+		transition: 0.2s ease-out;
+		z-index: 10;
+		position: relative;
+
+		&:hover, &:active, &.active {
+			border: 3px dashed var(--ac-color);
+		}
+
+		label {
+			position: absolute !important;
+			top: 0 !important;
+			left: 0.5em !important;
+			font-size: 1em !important;
+			translate: 0 -50%;
+			padding-inline: 0.5em;
+			background-color: var(--pr-color);
+			font-size: 1.2em;
+			color: var(--tx-color-op-2);
+			z-index: 5;
+		}
+
+		> * {
+			pointer-events: none;
+		}
+
+		.icon {
+			font-size: 3em;
+		}
+
+		.info {
+			display: flex;
+			flex-direction: column;
+			gap: 0.5em;
+
+			p {
+				font-size: 1.2em;
+			}
+
+			span {
+				color: var(--tx-color-op-2);
+			}
+		}
+	}
+	
+	input {
+		display: none;
+	}
+
+	.imageList {
+		display: flex;
+		height: max-content;
+		padding-block: 0.5em;
+		gap: 1em;
+		flex-wrap: nowrap;
+		white-space: nowrap;
+		overflow-x: auto;
+
+		.image {
+			height: 4em;
+			width: 4em;
+			flex-shrink: 0;
+			border: 3px solid var(--ac-color);
+			position: relative;
+			background-color: var(--pr-color);
+
+			button {
+				width: 1em;
+				height: 1em;
+				position: absolute;
+				top: -0.5em;
+				right: -0.5em;
+				background-color: var(--ac-color);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				color: var(--pr-color);
+			}
+
+			img {
+				width: 100%;
+				height: 100%;
+				object-fit: contain;
+			}
+		}
+	}
+}

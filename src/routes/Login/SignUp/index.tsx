@@ -1,6 +1,6 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import styles from './styles.module.scss'
-import { Link } from 'wouter'
+import { Link, useLocation } from 'wouter'
 import { PiAtBold, PiCaretLeftBold, PiKeyBold, PiUserBold } from 'react-icons/pi'
 import Api from '../../../utils/api'
 import Tippy from '@tippyjs/react'
@@ -8,8 +8,10 @@ import 'tippy.js/dist/tippy.css'
 import { useAllStore } from '../../../store/useAllStore'
 
 const SignUp = () => {
+	const user = useAllStore(state => state.user)
 	const [passError, setPassError] = useState(false)
 	const setUser = useAllStore(state => state.setUser)
+	const [, navigate] = useLocation()
 	
 	const handleChange = () => {
 		if (passError) setPassError(false)
@@ -27,11 +29,15 @@ const SignUp = () => {
 			setUser(data.data)
 		})
 	}
+
+	useEffect(() => {
+		if (user) navigate('~/')
+	}, [user])
 	
 	return (
 		<div className={styles.signUp}>
 			<span>
-				<Link to='/'>
+				<Link to='/' className={styles.back}>
 					<div className={styles.icon}>
 						<PiCaretLeftBold />
 					</div>

@@ -5,6 +5,7 @@
 	position: relative;
 	width: 100%;
 	height: 100dvh;
+	overflow: hidden;
 
 	.menuButton {
 		z-index: 50;
@@ -44,19 +45,41 @@
 		ul {
 			display: flex;
 			flex-direction: column;
-			gap: 1em;
 			font-size: 1.2em;
-			padding: 1em;
 			height: 100%;
+			padding-block: 1em;
+			list-style: none;
 
 			li {
-				display: flex;
-				align-items: center;
-				gap: 0.5em;
-				padding: 0.5em;
+				a {
+					display: flex;
+					align-items: center;
+					gap: 0.5em;
+					padding: 1em 1.5em;
+					transition: 0.2s ease-out;
+					color: var(--tx-color);
+					text-decoration: none;
+
+					&:hover {
+						background-color: var(--ac-color);
+						color: var(--pr-color);
+					}
+				}
 
 				&.last {
 					margin-top: auto;
+					display: flex;
+					align-items: center;
+					gap: 0.5em;
+					padding: 1em 1.5em;
+					transition: 0.2s ease-out;
+					color: var(--tx-color);
+					text-decoration: none;
+
+					&:hover {
+						background-color: var(--ac-color);
+						color: var(--pr-color);
+					}
 				}
 
 				.icon {

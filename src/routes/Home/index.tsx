@@ -1,12 +1,13 @@
-import { PiGearBold, PiGpsBold, PiGpsFixBold, PiListBold, PiPlusBold, PiSignOutBold, PiUserBold, PiXBold } from 'react-icons/pi'
+import { PiGearBold, PiGpsBold, PiGpsFixBold, PiListBold, PiPlusBold, PiSignOutBold, PiUserBold, PiUsersThreeBold, PiXBold } from 'react-icons/pi'
 import Map from '../../components/Map'
 import styles from './styles.module.scss'
 import Icon from '../../components/Icon'
-import { useLocation } from 'wouter'
-import { useEffect, useState } from 'react'
+import { Link, useLocation } from 'wouter'
+import { useEffect, useRef, useState } from 'react'
 import Api from '../../utils/api'
 import { motion, AnimatePresence } from 'framer-motion' 
 import { useAllStore } from '../../store/useAllStore'
+import SelectedCommerce from '../../components/SelectedCommerce'
 
 const Home = () => {
 	const [, navigate] = useLocation()
@@ -18,6 +19,8 @@ const Home = () => {
 	const locate = useAllStore(state => state.locate)
 	const setLocate = useAllStore(state => state.setLocate)
 	const located = useAllStore(state => state.located)
+	const selectedCommerce = useAllStore(state => state.selectedCommerce)
+	const menuRef = useRef<HTMLDivElement>(null)
 	
 	const handleSearch = () => {
 		navigate('/search')
@@ -39,34 +42,50 @@ const Home = () => {
 	
 	return (
 		<div className={styles.home}>
+			<AnimatePresence>
+				{selectedCommerce &&
+					<SelectedCommerce id={selectedCommerce} />
+				}
+			</AnimatePresence>
 			<button className={styles.menuButton} onClick={() => setMenu(!menu)}>
-					<div className={styles.icon}>
-						{menu ?
-							<PiXBold />
-						:
-							<PiListBold />
-						}
-					</div>
-				</button>
-				<AnimatePresence>
-					{menu &&
-						<motion.div initial={{ x: '-100%' }} animate={{ x: '-4em' }} exit={{ x: '-100%' }} className={styles.menu}>
-							<ul>
-								<li>
-									<div className={styles.icon}><PiUserBold /></div> Perfil
-								</li>
-								{user && user !== 'guest' && user.roles.includes('ROLE_ADMIN') &&
-									<li>
-										<div className={styles.icon}><PiGearBold /></div> Panel de control
-									</li>
-								}
-								<li className={styles.last} onClick={handleSignOut}>
-									<div className={styles.icon}><PiSignOutBold /></div> Cerrar sesión
-								</li>
-							</ul>
-						</motion.div>
+				<div className={styles.icon}>
+					{menu ?
+						<PiXBold />
+					:
+						<PiListBold />
 					}
-				</AnimatePresence>
+				</div>
+			</button>
+			<AnimatePresence>
+				{menu &&
+					<motion.div initial={{ x: '-100%' }} animate={{ x: '-4em' }} exit={{ x: '-100%' }} className={styles.menu} ref={menuRef}>
+						<ul>
+							{user !== 'guest' &&
+								<li>
+									<Link to='/profile'>
+										<div className={styles.icon}><PiUserBold /></div> Perfil
+									</Link>
+								</li>
+							}
+							<li>
+								<Link to='/community'>
+									<div className={styles.icon}><PiUsersThreeBold /></div> Comunidad
+								</Link>
+							</li>
+							{user && user !== 'guest' && user.roles.includes('ROLE_ADMIN') &&
+								<li>
+									<Link to='/dashboard'>
+										<div className={styles.icon}><PiGearBold /></div> Panel de control
+									</Link>
+								</li>
+							}
+							<li className={styles.last} onClick={handleSignOut}>
+								<div className={styles.icon}><PiSignOutBold /></div> Cerrar sesión
+							</li>
+						</ul>
+					</motion.div>
+				}
+			</AnimatePresence>
 			<div className={styles.controlsWrapper}>
 				<div className={styles.controls}>
 					<div className={styles.nav}>
@@ -75,7 +94,7 @@ const Home = () => {
 								<Icon color='var(--pr-color)' />
 							</div>
 						</button>
-						<button>
+						<button onClick={() => navigate('/add')}>
 							<div className={styles.icon}>
 								<PiPlusBold />
 							</div>
@@ -88,7 +107,7 @@ const Home = () => {
 					</div>
 				</div>
 			</div>
-			<Map markers={commerces.map(({ coordsLat, coordsLon, name }) => ({ coords: [coordsLat, coordsLon], text: name }))} center={[-34.89829, -56.16730]} />
+			<Map markers={commerces.map(({ coordsLat, coordsLon, name, verified, id, type }) => ({ coords: [coordsLat, coordsLon], text: name, verified, id, type }))} center={[-34.89829, -56.16730]} />
 		</div>
 	)
 }

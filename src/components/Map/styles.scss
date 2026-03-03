@@ -10,4 +10,29 @@
 	.leaflet-control-attribution {
 		display: none;
 	}
+
+	.leaflet-popup-content-wrapper {
+		border-radius: 0;
+		background-color: var(--ac-color);
+		color: var(--pr-color);
+		font-family: 'Signika', sans-serif;
+		white-space: nowrap;
+
+		.leaflet-popup-content {
+			font-size: 1.2em;
+			width: max-content !important;
+		}
+	}
+
+	.leaflet-popup-close-button span {
+		color: var(--pr-color);
+	}
+
+	.leaflet-popup-tip {
+		background-color: var(--ac-color);
+	}
+
+	.leaflet-marker-pane img {
+		outline: none;
+	}
 }
