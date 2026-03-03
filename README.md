@@ -20,7 +20,10 @@ Primero clonamos este repositorio y accedemos al directorio con los comandos:
 > cd nutrilens-client
 
 > [!IMPORTANT] 
-> Asegurarse de crear un archivo .env en la raíz del proyecto que contenta la variable de entorno "VITE_API_URL", cuyo valor sea igual a la URL de nuestro servidor.
+> Asegurarse de crear un archivo .env en la raíz del proyecto que contenta tres variables de entorno:
+>   - "VITE_API_URL", cuyo valor sea igual a la URL de nuestro servidor.
+>   - "VITE_OSRM_URL", cuyo valor sea igual a la URL del servidor OSRM.
+>   - "VITE_NOMINATIM_URL", cuyo valor sea igual a la URL del servidor Nominatim.
 
 Dependiendo de nuestro runtime a utilizar los comandos serán diferentes, por lo que debe referirse al que corresponda para ejecutar los comandos siguientes.
 
@@ -63,3 +66,6 @@ Dependiendo de nuestro runtime a utilizar los comandos serán diferentes, por lo
     >
     > npm run preview
 </details>
+
+> [!IMPORTANT] 
+> Sí o sí necesitamos que esté corriendo el [servidor backend](https://github.com/Vienna-Code/nutrilens-backend) junto con el servidor OSRM y el servidor Nominatim, de lo contrario el proyecto no funcionará correctamente o tendrá capacidades limitadas.
