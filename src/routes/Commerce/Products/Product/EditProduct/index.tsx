@@ -8,12 +8,15 @@ import { Checkbox, FormControlLabel } from '@mui/material'
 import Tippy from '@tippyjs/react'
 import { motion } from 'framer-motion'
 import DropImage from '../../../../../components/DropImage'
+import { useAllStore } from '../../../../../store/useAllStore'
+import NotFound from '../../../../../components/NotFound'
 
 const EditProduct = () => {
 	const { id, pid } = useParams()
+	const user = useAllStore(state => state.user)
 	const [, navigate] = useLocation()
-	const [commerce, setCommerce] = useState<Commerce>()
-	const [product, setProduct] = useState<Product>()
+	const [commerce, setCommerce] = useState<Commerce|null>()
+	const [product, setProduct] = useState<Product|null>()
 	const [error, setError] = useState({ field: '', message: '' })
 	const [loading, setLoading] = useState(false)
 	const [success, setSuccess] = useState(false)
@@ -26,7 +29,7 @@ const EditProduct = () => {
 		Api.getCommerce(id as string)
 		.then(data => {
 			setCommerce(data.data)
-		})
+		}).catch(() => setCommerce(null))
 	}, [id])
 
 	useEffect(() => {
@@ -38,8 +41,18 @@ const EditProduct = () => {
 
 			const parseImages = data.productImages ? data.productImages.map((x: string, i: number) => ({ id: i + 1, image: x })) : []
 			setImages(parseImages)
-		})
+		}).catch(() =>setProduct(null))
 	}, [pid])
+
+	useEffect(() => {
+		if (error.field) resetError()
+	}, [images])
+
+	useEffect(() => {
+		if (successCounter === 0) navigate('/..')
+	}, [successCounter])
+
+	if (user === 'guest' || !user || !user.roles.includes('ROLE_ADMIN') && user.userRank !== 'platinum' || user.userRank !== 'gold') return <NotFound icon='prohibit' title='Rango insuficiente' message='Debes ser de rango oro o superior para modificar un producto' buttonIcon='product' buttonText='Volver al producto' link='/' />
 
 	const trim = (string: string) => {
 		return string.trim()
@@ -91,14 +104,6 @@ const EditProduct = () => {
 		})
 	}
 
-	useEffect(() => {
-		if (error.field) resetError()
-	}, [images])
-
-	useEffect(() => {
-		if (successCounter === 0) navigate('/..')
-	}, [successCounter])
-
 	const resetError = () => {
 		setError(() => ({ field: '', message: '' }))
 	}
@@ -119,7 +124,7 @@ const EditProduct = () => {
 				</div>
 			}
 			{commerce === undefined || product === undefined || loading ? <LoadingPage absolute />
-			:
+			: commerce && product ?
 				<>
 					<Link to={'/..'}>
 						<div className={styles.icon}>
@@ -192,6 +197,10 @@ const EditProduct = () => {
 						</div>
 					</form>
 				</>
+			: commerce === null ?
+				<NotFound icon='404' title='Comercio no encontrado' message='Verifica que la URL sea correcta o vuelve a buscar el comercio' buttonIcon='search' buttonText='Buscar' link='~/search' />
+			: product === null &&
+				<NotFound icon='404' title='Producto no encontrado' message='Verifica que la URL sea correcta o vuelve al comercio' buttonIcon='commerce' buttonText='Volver' link={`~/commerce/${id}`} />
 			}
 		</div>
 	)

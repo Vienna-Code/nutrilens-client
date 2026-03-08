@@ -87,6 +87,19 @@ class Api {
 		.then(data => data.data)
 	}
 
+	public static getUserCommercesStats = () => {
+		const options: RequestInit = {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include'
+		}
+
+		return this.newFetch('/users/me/commerces/stats', options)
+		.then(data => data.data)
+	}
+
 	public static getUserProducts = () => {
 		const options: RequestInit = {
 			method: 'GET',
@@ -97,6 +110,19 @@ class Api {
 		}
 
 		return this.newFetch('/users/me/products', options)
+		.then(data => data.data)
+	}
+
+	public static getUserProductsStats = () => {
+		const options: RequestInit = {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include'
+		}
+
+		return this.newFetch('/users/me/products/stats', options)
 		.then(data => data.data)
 	}
 
@@ -113,6 +139,19 @@ class Api {
 		.then(data => data.data)
 	}
 
+	public static getUserReviewsStats = () => {
+		const options: RequestInit = {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include'
+		}
+
+		return this.newFetch('/users/me/reviews/stats', options)
+		.then(data => data.data)
+	}
+
 	public static getUserPosts = () => {
 		const options: RequestInit = {
 			method: 'GET',
@@ -124,6 +163,77 @@ class Api {
 
 		return this.newFetch('/users/me/posts', options)
 		.then(data => data.data)
+	}
+
+	public static getUserPostsStats = () => {
+		const options: RequestInit = {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include'
+		}
+
+		return this.newFetch('/users/me/posts/stats', options)
+		.then(data => data.data)
+	}
+
+	public static getUsers = () => {
+		const options: RequestInit = {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include'
+		}
+		
+		return this.newFetch('/users', options)
+		.then(data => data.data)
+	}
+
+	public static getUsersStats = () => {
+		const options: RequestInit = {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include'
+		}
+		
+		return this.newFetch('/users/stats', options)
+		.then(data => data.data)
+	}
+
+	public static uploadUserImage = (uuid: string) => {
+		const options: RequestInit = {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include',
+			body: JSON.stringify({
+				profilePicture: uuid
+			})
+		}
+
+		return this.newFetch('/users/me', options)
+		.then(data => data)
+	}
+
+	public static editUserRestrictions = (alimentaryRestrictions: ('celiac'|'hypertensive'|'diabetic')[]) => {
+		const options: RequestInit = {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include',
+			body: JSON.stringify({
+				alimentaryRestrictions
+			})
+		}
+
+		return this.newFetch('/users/me', options)
+		.then(data => data)
 	}
 
 	public static getCommerces = (params?: {
@@ -156,7 +266,7 @@ class Api {
 			commerceTypes: (value: ('kiosk'|'supermarket'|'restaurant')[]) => value.join(',')
 		}
 		const parseParams = !params ? undefined : Object.entries(params).filter(([, value]) => value !== undefined && value !== '').map(([key, value]) => {
-			return key === 'unverified' ? key : `${key}=${mapParams[key as keyof typeof mapParams](value as never)}`
+			return key === 'unverified' ? value ? key : '' : `${key}=${mapParams[key as keyof typeof mapParams](value as never)}`
 		})
 
 		return this.newFetch(`/commerces${parseParams ? `?${parseParams.join('&')}` : ''}`, options)
@@ -174,6 +284,19 @@ class Api {
 		
 		return this.newFetch(`/commerces/${id}`, options)
 		.then(data => data)
+	}
+
+	public static getCommercesStats = () => {
+		const options: RequestInit = {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include'
+		}
+		
+		return this.newFetch('/commerces/stats', options)
+		.then(data => data.data)
 	}
 
 	public static checkCommerce = (coords: LatLngTuple) => {
@@ -233,7 +356,23 @@ class Api {
 		.then(data => data)
 	}
 
-	public static getCommerceReports = () => {
+	public static verifyCommerceAdmin = (cid: string, verify: boolean) => {
+		const options: RequestInit = {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				verified: verify
+			}),
+			credentials: 'include'
+		}
+
+		return this.newFetch(`/commerces/${cid}`, options)
+		.then(data => data)
+	}
+
+	public static getCommercesReports = (types: ('confirmation'|'rebuttal'|'submission'|'issue')[]) => {
 		const options: RequestInit = {
 			method: 'GET',
 			headers: {
@@ -242,7 +381,7 @@ class Api {
 			credentials: 'include'
 		}
 
-		return this.newFetch('/commerces/reports', options)
+		return this.newFetch(`/reports?resource=commerces&types=${types.join(',')}`, options)
 		.then(data => data.data)
 	}
 
@@ -309,6 +448,19 @@ class Api {
 		.then(data => data.data)
 	}
 
+	public static getProductsStats = () => {
+		const options: RequestInit = {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include'
+		}
+		
+		return this.newFetch('/products/stats', options)
+		.then(data => data.data)
+	}
+
 	public static addProduct = (product: AddProduct) => {
 		const options: RequestInit = {
 			method: 'POST',
@@ -353,7 +505,23 @@ class Api {
 		.then(data => data)
 	}
 
-	public static getProductReports = () => {
+	public static verifyProductAdmin = (pid: string, verify: boolean) => {
+		const options: RequestInit = {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include',
+			body: JSON.stringify({
+				verified: verify
+			})
+		}
+
+		return this.newFetch(`/products/${pid}`, options)
+		.then(data => data)
+	}
+
+	public static getProductsReports = (types: ('confirmation'|'rebuttal'|'submission'|'issue')[]) => {
 		const options: RequestInit = {
 			method: 'GET',
 			headers: {
@@ -362,7 +530,7 @@ class Api {
 			credentials: 'include'
 		}
 
-		return this.newFetch('/products/reports', options)
+		return this.newFetch(`/reports?resource=products&types=${types.join(',')}`, options)
 		.then(data => data.data)
 	}
 
@@ -381,6 +549,19 @@ class Api {
 
 		return this.newFetch(`/products/${pid}/reports`, options)
 		.then(data => data)
+	}
+
+	public static getReportsStats = () => {
+		const options: RequestInit = {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include'
+		}
+
+		return this.newFetch('/reports/stats?types=issue', options)
+		.then(data => data.data)
 	}
 
 	public static getReviews = (cid: string) => {
@@ -489,7 +670,7 @@ class Api {
 		}
 
 		return this.newFetch('/posts/stats', options)
-		.then(data => data)
+		.then(data => data.data)
 	}
 
 	public static addPost = (newPost: NewPost) => {

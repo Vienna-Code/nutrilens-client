@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type Dispatch, type SetStateAction } from 'react'
 import { useAllStore } from '../../../store/useAllStore'
 import styles from './styles.module.scss'
 import Api from '../../../utils/api'
@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Tippy from '@tippyjs/react'
 import ImageVisualizer from '../../../components/ImageVisualizer'
 	
-const GeneralInfo = ({ commerce }: { commerce: Commerce }) => {
+const GeneralInfo = ({ commerce, setLocalVerify }: { commerce: Commerce, setLocalVerify: Dispatch<SetStateAction<boolean | undefined>> }) => {
 	const userLocation = useAllStore(state => state.userLocation)
 	const user = useAllStore(state => state.user)
 	const [, navigate] = useLocation()
@@ -26,6 +26,17 @@ const GeneralInfo = ({ commerce }: { commerce: Commerce }) => {
 	}
 
 	const handleVerify = (verify: boolean) => () => {
+		if (!user || user === 'guest') return
+		
+		if (user.roles.includes('ROLE_ADMIN')) {
+			return Api.verifyCommerceAdmin(commerce.id, verify)
+			.then((data) => {
+				setVerifyModal(false)
+				setLocalVerify(data.data.verified)
+				setVerified(verify)
+			})
+		}
+		
 		Api.verifyCommerce(commerce.id, verify)
 		.then(() => {
 			setVerifyModal(false)
@@ -123,7 +134,7 @@ const GeneralInfo = ({ commerce }: { commerce: Commerce }) => {
 			</button>
 			{user !== 'guest' &&
 				<div className={styles.actions}>
-					{commerce.submittedByUser ?
+					{commerce.submittedByUser && user && !user.roles.includes('ROLE_ADMIN') ?
 						<Tippy content='No puedes verificar tu propio comercio'>
 							<button className={styles.disabled}>
 								<div className={styles.icon}><PiCheckBold /></div>
@@ -152,12 +163,23 @@ const GeneralInfo = ({ commerce }: { commerce: Commerce }) => {
 							{commerce.userVerificationReport !== null || verified !== undefined ? 'Verificado' : 'Verificar'}
 						</button>
 					}
-					<button onClick={() => navigate('/edit')}>
-						<div className={styles.icon}>
-							<PiPencilBold />
-						</div>
-						Editar
-					</button>
+					{!user || !user.roles.includes('ROLE_ADMIN') && user.userRank === 'bronze' || user.userRank === 'silver' ?
+						<Tippy content='Debes ser de rango oro o superior para editar un comercio'>
+							<button className={styles.disabled}>
+								<div className={styles.icon}>
+									<PiPencilBold />
+								</div>
+								Editar
+							</button>
+						</Tippy>
+					:
+						<button onClick={() => navigate('/edit')}>
+							<div className={styles.icon}>
+								<PiPencilBold />
+							</div>
+							Editar
+						</button>
+					}
 				</div>
 			}
 			<div className={styles.item}>

@@ -12,13 +12,14 @@ import { useAllStore } from '../../../store/useAllStore'
 import { imageURL } from '../../../utils/images'
 import { parseHour } from '../../../utils/dates'
 import ImageVisualizer from '../../../components/ImageVisualizer'
+import NotFound from '../../../components/NotFound'
 
 const Post = () => {
 	const { id } = useParams()
 	const [searchParams, setSearchParams] = useSearchParams()
 	const comment = searchParams.get('comment')
 	const user = useAllStore(state => state.user)
-	const [post, setPost] = useState<Post>()
+	const [post, setPost] = useState<Post|null>()
 	const [comments, setComments] = useState<UserComment[]>()
 	const [page, setPage] = useState(1)
 	const [rankIndex, setRankIndex] = useState(0)
@@ -41,7 +42,7 @@ const Post = () => {
 				setServerLike(data.liked)
 
 				setPost(data)
-			})
+			}).catch(() => setPost(null))
 
 			Api.getComments(+id, `${page}`).then(data => {
 				setComments(data)
@@ -135,8 +136,8 @@ const Post = () => {
 	
 	return (
 		<div className={styles.post}>
-			{post === undefined && <LoadingPage />}
-			{post &&
+			{post === undefined ? <LoadingPage />
+			: post ?
 				<>
 					<AnimatePresence>
 						{viewImages !== undefined && post.attachments && <ImageVisualizer {...{viewImages, setViewImages}} images={post.attachments} />}
@@ -150,7 +151,7 @@ const Post = () => {
 					<div className={styles.fullPost}>
 						<div className={styles.top}>
 							<div className={styles.profilePic}>
-								<img src={post.user.profilePicture || `https://ui-avatars.com/api/?name=${post.user.username}&background=3b9c6a&color=1c1c1c&size=48&font-size=0.35&uppercase=true`} alt="" />
+								<img src={post.user.profilePicture ? `${import.meta.env.VITE_API_URL}/images/${post.user.profilePicture}` : `https://ui-avatars.com/api/?name=${post.user.username}&background=3b9c6a&color=1c1c1c&size=48&font-size=0.35&uppercase=true`} alt="" />
 							</div>
 							<div className={styles.info}>
 								<div className={styles.name}>
@@ -283,6 +284,14 @@ const Post = () => {
 								</div>
 								{comments ? comments.length : 0}
 							</motion.button>
+							{user && user !== 'guest' && user.id === post.user.id &&
+								<Link to='/edit'>
+									<div className={styles.icon}>
+										<PiPencilBold />
+									</div>
+									Editar
+								</Link>
+							}
 						</div>
 						<div className={styles.comments}>
 							<form onSubmit={handleSubmit}>
@@ -303,6 +312,8 @@ const Post = () => {
 						</div>
 					</div>
 				</>
+			:
+				<NotFound title='Post no encontrado' message='Verifica que la URL sea correcta o vuelve al inicio' icon='404' buttonText='Inicio' buttonIcon='post' link={`~/community`} />
 			}
 		</div>
 	)

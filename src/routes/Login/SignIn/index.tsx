@@ -43,7 +43,7 @@ const SignIn = () => {
 					<div className={styles.icon}>
 						<PiCaretLeftBold />
 					</div>
-					Volver
+					Atrás
 				</Link>
 			</span>
 			<h2>¡Bienvenid@ de vuelta!</h2>

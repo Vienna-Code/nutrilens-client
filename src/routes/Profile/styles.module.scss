@@ -1,6 +1,6 @@
 .profile {
 	width: 100%;
-	height: 100dvh;
+	min-height: 100dvh;
 	padding: 1.5em;
 	display: flex;
 	flex-direction: column;
@@ -11,6 +11,7 @@
 		align-items: center;
 		gap: 0.5em;
 		color: var(--tx-color);
+		width: max-content;
 
 		.icon {
 			display: flex;
@@ -24,21 +25,80 @@
 		gap: 1.5em;
 
 		.profilePic {
-			width: 30%;
-			height: auto;
+			position: relative;
+			width: 100%;
+			height: 100%;
+			aspect-ratio: 1 / 1;
 			clip-path: polygon(1.5em 0, 100% 0, 100% calc(100% - 1.5em), calc(100% - 1.5em) 100%, 0 100%, 0 1.5em);
+
+			&:hover {
+				.uploadImage {
+					opacity: 0.9;
+				}
+			}
+
+			.uploadImage {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				background-color: var(--pr-color);
+				opacity: 0;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+				text-align: center;
+				text-wrap: balance;
+				gap: 0.5em;
+				transition: 0.2s ease-out;
+				
+				.icon {
+					font-size: 2em;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+			}
 
 			img {
 				width: 100%;
 				height: 100%;
 				object-fit: cover;
 			}
+
+			input {
+				display: none;
+			}
+		}
+
+		.profilePicWrapper {
+			width: 30%;
+			aspect-ratio: 1 / 1;
+			height: auto;
+			position: relative;
+
+			button {
+				position: absolute;
+				bottom: -0.5em;
+				padding: 0.5em;
+				display: flex;
+				align-items: center;
+				background-color: var(--ac-color);
+				color: var(--pr-color);
+
+				&.accept {
+					right: -0.5em;
+				}
+
+				&.deny {
+					left: -0.5em;
+				}
+			}
 		}
 
 		.data {
 			display: flex;
 			flex-direction: column;
-			gap: 0.5em;
 
 			.name {
 				font-size: 1.5em;
@@ -53,6 +113,59 @@
 					img {
 						width: 100%;
 						height: 100%;
+					}
+				}
+			}
+
+			.restrictions {
+				display: flex;
+				gap: 0.5em;
+				align-items: center;
+				margin-block: 0.5em;
+
+				.restriction {
+					display: flex;
+					align-items: center;
+					color: var(--ac-color);
+				}
+
+				button {
+					background-color: transparent;
+					display: flex;
+					align-items: center;
+					color: var(--tx-color);
+					gap: 0.5em;
+					text-decoration: underline;
+
+					.icon {
+						display: flex;
+						align-items: center;
+					}
+				}
+
+				form {
+					display: flex;
+					align-items: center;
+					gap: 0.5em;
+
+					fieldset {
+						border: none;
+
+						label {
+							padding: 0.5em;
+							display: flex;
+							align-items: center;
+							transition: 0.2s ease-out;
+
+							&:has(+ input:checked) {
+								background-color: var(--ac-color);
+								color: var(--pr-color);
+							}
+						}
+
+						input {
+							display: none;
+						}
 					}
 				}
 			}
@@ -115,34 +228,132 @@
 		}
 	}
 
-	.section {
-		display: flex;
-		flex-direction: column;
+	.stats {
+		width: 100%;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
 		gap: 1em;
 
-		.list {
-			display: grid;
-			grid-template-columns: 1fr 1fr;
-			gap: 1em;
+		.commerces {
+			grid-column: span 2;
+		}
 
-			&:has(span) {
+		.posts {
+			grid-column: span 2;
+		}
+
+		.commerces, .products, .posts, .reviews {
+			width: 100%;
+			background-color: var(--tx-color-op);
+			height: max-content;
+			display: flex;
+			flex-direction: column;
+			gap: 0.5em;
+			padding: 1em;
+			clip-path: polygon(1em 0, 100% 0, 100% calc(100% - 1em), calc(100% - 1em) 100%, 0 100%, 0 1em);
+
+			.counter {
+				font-size: 2em;
 				display: flex;
+				flex-direction: column;
+
+				span {
+					font-size: 0.6em;
+				}
 			}
 
-			.item {
+			button {
 				display: flex;
 				gap: 0.5em;
-				padding: 0.7em 1em;
-				background-color: var(--ac-color);
+				font-size: 1em;
+				align-items: center;
+				padding: 0.5em 1em;
 				color: var(--pr-color);
-				clip-path: polygon(1em 0, 100% 0, 100% calc(100% - 1em), calc(100% - 1em) 100%, 0 100%, 0 1em);
-
+				background-color: var(--ac-color);
+				clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+				flex: 1;
+		
 				.icon {
 					display: flex;
 					align-items: center;
 					justify-content: center;
 				}
 			}
+		}
+	}
+
+	.ranks {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5em;
+
+		h3:has(+ .rank.active) {
+			margin-bottom: 1em;
+		}
+
+		.rank {
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			gap: 1em;
+			padding: 1.5em 1em;
+			
+			&.active {
+				border: 3px solid var(--ac-color);
+			}
+
+			.top {
+				width: 100%;
+				display: flex;
+				gap: 1em;
+				align-items: center;
+				
+				.rankImage {
+					height: auto;
+					width: 2.5em;
+	
+					img {
+						width: 100%;
+						height: 100%;
+						object-fit: cover;
+					}
+				}
+	
+				.title {
+					font-size: 1.2em;
+				}
+			}
+
+			.text {
+				display: flex;
+				flex-direction: column;
+				gap: 0.5em;
+
+				ul {
+					padding-left: 1.5em;
+					display: flex;
+					flex-direction: column;
+					gap: 1em;
+					font-size: 1.1em;
+
+					li {
+						text-wrap: wrap;
+
+						&.add {
+							font-weight: 700;
+							
+							&::marker {
+								color: var(--ac-color);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		p {
+			font-style: italic;
 		}
 	}
 }

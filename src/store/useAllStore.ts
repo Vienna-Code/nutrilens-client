@@ -1,44 +1,63 @@
 import type { LatLng } from 'leaflet'
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 
 interface State {
 	user: User,
-	setUser: (user: User) => void,
 	commerces: Commerce[],
-	setCommerces: (commerces: Commerce[]) => void,
 	locate: boolean,
-	setLocate: (locate: boolean) => void,
 	located: boolean,
-	setLocated: (located: boolean) => void,
 	userLocation?: LatLng,
-	setUserLocation: (userLocation: LatLng) => void,
 	selectedCommerce?: string,
-	setSelectedCommerce: (id?: string) => void
+	unverifiedCommerces: boolean,
+	unverifiedProducts: boolean,
+	setUser: (user: User) => void,
+	setCommerces: (commerces: Commerce[]) => void,
+	setLocate: (locate: boolean) => void,
+	setLocated: (located: boolean) => void,
+	setUserLocation: (userLocation: LatLng) => void,
+	setSelectedCommerce: (id?: string) => void,
+	setUnverifiedCommerces: (unverifiedCommerces: boolean) => void,
+	setUnverifiedProducts: (unverifiedProducts: boolean) => void
 }
 
-export const useAllStore = create<State>()((set) => ({
+export const useAllStore = create<State>()(persist((set) => ({
 	user: undefined,
+	commerces: [],
+	locate: false,
+	located: false,
+	userLocation: undefined,
+	selectedCommerce: undefined,
+	unverifiedCommerces: true,
+	unverifiedProducts: true,
 	setUser: (user) => {
 		set({ user })
 	},
-	commerces: [],
 	setCommerces: (commerces) => {
 		set({ commerces })
 	},
-	locate: false,
 	setLocate: (locate) => {
 		set({ locate })
 	},
-	located: false,
 	setLocated: (located) => {
 		set({ located })
 	},
-	userLocation: undefined,
 	setUserLocation: (userLocation) => {
 		set({ userLocation })
 	},
-	selectedCommerce: undefined,
 	setSelectedCommerce: (selectedCommerce) => {
 		set({ selectedCommerce })
+	},
+	setUnverifiedCommerces: (unverifiedCommerces) => {
+		set({ unverifiedCommerces })
+	},
+	setUnverifiedProducts: (unverifiedProducts) => {
+		set({ unverifiedProducts })
 	}
+}), {
+	name: 'nutrilens-store',
+	partialize: state => ({
+		unverifiedCommerces: state.unverifiedCommerces,
+		setUnverifiedProducts: state.unverifiedProducts
+	})
 }))

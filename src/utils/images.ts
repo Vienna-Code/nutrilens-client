@@ -1,22 +1,22 @@
-export const convertImage = (img: HTMLImageElement, name: string, square: boolean): Promise<File> | undefined => {
+export const convertImage = (img: HTMLImageElement, name: string, square: boolean, size = 1000): Promise<File> | undefined => {
 	URL.revokeObjectURL(img.src)
 
 	const canvas = document.createElement('canvas')
 	const context = canvas.getContext('2d')
 
-	canvas.width = square ? 1000 : img.naturalWidth > img.naturalHeight ? 1000 : img.naturalWidth * (1000 / img.naturalHeight)
-	canvas.height = square ? canvas.width : img.naturalHeight > img.naturalWidth ? 1000 : img.naturalHeight * (1000 / img.naturalWidth)
+	canvas.width = square ? size : img.naturalWidth > img.naturalHeight ? size : img.naturalWidth * (size / img.naturalHeight)
+	canvas.height = square ? canvas.width : img.naturalHeight > img.naturalWidth ? size : img.naturalHeight * (size / img.naturalWidth)
 
 	const imgWidth = img.naturalWidth
 	const imgHeight = img.naturalHeight
 
-	const scale = Math.min(1000 / imgWidth, 1000 / imgHeight)
+	const scale = Math.min(size / imgWidth, size / imgHeight)
 
 	const scaledWidth = imgWidth * scale
 	const scaledHeight = imgHeight * scale
 
 	if (context) {
-		context.drawImage(img, square ? (1000 - scaledWidth) / 2 : 0, square ? (1000 - scaledHeight) / 2 : 0, square ? scaledWidth : canvas.width, square ? scaledHeight : canvas.height)
+		context.drawImage(img, square ? (size - scaledWidth) / 2 : 0, square ? (size - scaledHeight) / 2 : 0, square ? scaledWidth : canvas.width, square ? scaledHeight : canvas.height)
 		
 		context.globalCompositeOperation = 'destination-over'
 		context.fillStyle = '#ffffff'

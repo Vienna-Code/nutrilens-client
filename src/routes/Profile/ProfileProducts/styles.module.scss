@@ -1,16 +1,17 @@
-.dashboard {
+.profileProducts {
 	width: 100%;
 	min-height: 100dvh;
 	padding: 1.5em;
 	display: flex;
 	flex-direction: column;
-	gap: 1.5em;
+	gap: 0.5em;
 
 	a {
 		display: flex;
-		gap: 0.5em;
 		align-items: center;
-		color: var(--tx-color );
+		gap: 0.5em;
+		color: var(--tx-color);
+		width: max-content;
 
 		.icon {
 			display: flex;
@@ -18,31 +19,42 @@
 		}
 	}
 
-	.options {
+	h3 {
+		font-size: 1.2em;
+		margin-top: 1em;
+	}
+
+	.list {
 		width: 100%;
 		height: max-content;
-		display: grid;
-		grid-template-columns: 1fr 1fr;
+		display: flex;
+		flex-direction: column;
 		gap: 1em;
+		padding-block: 1em;
 
-		.reports, .posts {
-			grid-column: span 2;
-		}
-
-		.commerces, .products, .posts, .reports {
+		.product {
 			width: 100%;
 			background-color: var(--tx-color-op);
-			height: max-content;
+			padding: 1.5em;
 			display: flex;
 			flex-direction: column;
 			gap: 0.2em;
-			padding: 1em;
 			clip-path: polygon(1em 0, 100% 0, 100% calc(100% - 1em), calc(100% - 1em) 100%, 0 100%, 0 1em);
 
-			.count {
-				font-size: 2em;
+			.title {
+				font-size: 1.2em;
+			}
+
+			.info {
 				display: flex;
 				flex-direction: column;
+				gap: 0.5em;
+
+				.brand {
+					display: flex;
+					align-items: center;
+					color: var(--tx-color-op-2);
+				}
 			}
 		}
 	}

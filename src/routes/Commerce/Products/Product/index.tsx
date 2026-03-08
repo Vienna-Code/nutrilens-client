@@ -9,6 +9,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useAllStore } from '../../../../store/useAllStore'
 import LoadingPage from '../../../../components/LoadingPage'
 import ImageVisualizer from '../../../../components/ImageVisualizer'
+import NotFound from '../../../../components/NotFound'
 
 const parseTag = {
 	'celiac': {
@@ -28,26 +29,38 @@ const parseTag = {
 const Product = () => {
 	const { pid, id } = useParams()
 	const user = useAllStore(state => state.user)
-	const [product, setProduct] = useState<Product>()
-	const [commerce, setCommerce] = useState<Commerce>()
+	const [product, setProduct] = useState<Product|null>()
+	const [commerce, setCommerce] = useState<Commerce|null>()
 	const [verifyModal, setVerifyModal] = useState(false)
 	const [verified, setVerified] = useState<boolean>()
 	const [viewImages, setViewImages] = useState<number>()
 	const [currentImage, setCurrentImage] = useState(0)
+	const [localVerify, setLocalVerify] = useState<boolean>()
 	const [, navigate] = useLocation()
 
 	useEffect(() => {
 		if (!product && pid) {
 			Api.getProduct(+pid).then(setProduct)
+			.catch(() => setProduct(null))
 		}
 
 		if (!commerce && id) {
 			Api.getCommerce(id).then(data => setCommerce(data.data))
+			.catch(() => setCommerce(null))
 		}
 	}, [])
 
 	const handleVerify = (verify: boolean) => () => {
-		if (!pid) return
+		if (!pid || !user || user === 'guest') return
+
+		if (user.roles.includes('ROLE_ADMIN')) {
+			return Api.verifyProductAdmin(pid, verify)
+			.then(data => {
+				setVerifyModal(false)
+				setVerified(verify)
+				setLocalVerify(data.data.verified)
+			})
+		}
 		
 		Api.verifyProduct(pid, verify)
 		.then(() => {
@@ -58,8 +71,8 @@ const Product = () => {
 	
 	return (
 		<div className={styles.product}>
-			{!product || !commerce && <LoadingPage />}
-			{product && commerce &&
+			{product === undefined || commerce === undefined && <LoadingPage />}
+			{product && commerce ?
 				<>
 					<AnimatePresence>
 						{viewImages !== undefined && product.productImages &&
@@ -132,18 +145,22 @@ const Product = () => {
 							</div>
 							{user !== 'guest' &&
 								<Link to='/report' className={styles.report}>
-									Reportar
 									<div className={styles.icon}>
 										<PiFlagBannerBold />
 									</div>
+									Reportar
 								</Link>
 							}
 						</div>
 						<div className={styles.name}>
 							{product.name}
-							<Tippy content={product.verified ? 'Producto verificado' : 'Producto no verificado'}>
-								<div className={`${styles.icon} ${product.verified ? styles.verified : ''}`}>
-									{product.verified ?
+							<Tippy content={localVerify !== undefined ? (localVerify ? 'Comercio verificado' : 'Comercio no verificado') : product.verified ? 'Comercio verificado' : 'Comercio no verificado'}>
+								<div className={`${styles.icon} ${localVerify !== undefined ? (localVerify ? styles.verified : '') : product.verified ? styles.verified : ''}`}>
+									{localVerify !== undefined ? (localVerify ?
+										<PiSealCheckBold />
+									:
+										<PiSealBold />
+									) : product.verified ?
 										<PiSealCheckBold />
 									:
 										<PiSealBold />
@@ -165,7 +182,7 @@ const Product = () => {
 						</div>
 						{user !== 'guest' &&
 							<div className={styles.buttons}>
-								{product.submittedByUser ?
+								{product.submittedByUser && user && !user.roles.includes('ROLE_ADMIN') ?
 									<Tippy content='No puedes verificar tu propio producto'>
 										<button className={styles.disabled}>
 											<div className={styles.icon}><PiCheckBold /></div>
@@ -194,14 +211,27 @@ const Product = () => {
 										{product.userVerificationReport !== null || verified !== undefined ? 'Verificado' : 'Verificar'}
 									</button>
 								}
-								<button onClick={() => navigate('/edit')}>
-									<div className={styles.icon}><PiPencilBold /></div>
-									Editar
-								</button>
+								{!user || !user.roles.includes('ROLE_ADMIN') && user.userRank === 'bronze' ?
+									<Tippy content='Debes ser de rango plata o superior para editar un producto'>
+										<button className={styles.disabled}>
+											<div className={styles.icon}><PiPencilBold /></div>
+											Editar
+										</button>
+									</Tippy>
+								:
+									<button onClick={() => navigate('/edit')}>
+										<div className={styles.icon}><PiPencilBold /></div>
+										Editar
+									</button>
+								}
 							</div>
 						}
 					</div>
 				</>
+			: commerce === null ?
+				<NotFound icon='404' title='Comercio no encontrado' message='Verifica que la URL sea correcta o vuelve a buscar el comercio' buttonIcon='search' buttonText='Buscar' link='~/search' />
+			: product === null &&
+				<NotFound icon='404' title='Producto no encontrado' message='Verifica que la URL sea correcta o vuelve al comercio' buttonIcon='commerce' buttonText='Volver' link={`~/commerce/${id}`} />
 			}
 		</div>
 	)

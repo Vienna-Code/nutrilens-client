@@ -3,12 +3,15 @@ import styles from './styles.module.scss'
 import { Link, useLocation } from 'wouter'
 import { useEffect, useState, type ChangeEvent } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Checkbox, FormControlLabel, Slider } from '@mui/material'
+import { Checkbox, FormControlLabel, Slider, Typography } from '@mui/material'
 import './styles.scss'
 import Api from '../../utils/api'
+import { useAllStore } from '../../store/useAllStore'
 
 const Search = () => {
 	const [, navigate] = useLocation()
+	const unverifiedCommerces = useAllStore(state => state.unverifiedCommerces)
+	const unverifiedProducts = useAllStore(state => state.unverifiedProducts)
 	const [search, setSearch] = useState('')
 	const [searchCom, setSearchCom] = useState<Commerce[]>()
 	const [searchProd, setSearchProd] = useState<Product[]>()
@@ -58,7 +61,7 @@ const Search = () => {
 			maxPrice: filters.range[1],
 			restrictions: Object.values(filters.aptFor).every(x => !x) ? undefined : Object.entries(filters.aptFor).filter(x => x[1]).map(x => x[0]) as ('celiac'|'diabetic'|'hypertensive')[],
 			commerceTypes: Object.values(filters.comType).every(x => !x) ? undefined : Object.entries(filters.comType).filter(x => x[1]).map(x => x[0]) as ('kiosk'|'supermarket'|'restaurant')[],
-			unverified: true
+			unverified: unverifiedCommerces
 		}).then(data => setSearchCom(data.data))
 
 		Api.getSearchProducts({
@@ -67,7 +70,7 @@ const Search = () => {
 			maxPrice: filters.range[1],
 			restrictions: Object.values(filters.aptFor).every(x => !x) ? undefined : Object.entries(filters.aptFor).filter(x => x[1]).map(x => x[0]) as ('celiac'|'diabetic'|'hypertensive')[],
 			category: Object.values(filters.category).every(x => !x) ? undefined : Object.entries(filters.category).filter(x => x[1]).map(x => x[0]) as ('food'|'drink')[],
-			unverified: true
+			unverified: unverifiedProducts
 		}).then(setSearchProd)
 	}
 
@@ -133,31 +136,31 @@ const Search = () => {
 								Rango de precio
 								<span>${filters.range[0]} - ${filters.range[1]}</span>
 								<div className={styles.range}>
-									<Slider value={filters.range} onChange={(_e, newValue) => setFilters(prev => ({ ...prev, range: newValue }))} valueLabelDisplay='auto' min={0} max={2500} className={styles.slider} />
+									<Slider value={filters.range} onChange={(_e, newValue) => setFilters(prev => ({ ...prev, range: newValue }))} valueLabelDisplay='auto' min={0} max={9999} step={50} className={styles.slider} />
 								</div>
 							</div>
 							<div className={styles.aptFor}>
 								Apto para
 								<div className={styles.fields}>
-									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.aptFor.celiac} onChange={e => handleCheck(e, 'aptFor')} name='celiac' />} label="Celíacos" />
-									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.aptFor.diabetic} onChange={e => handleCheck(e, 'aptFor')} name='diabetic' />} label="Diabéticos" />
-									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.aptFor.hypertensive} onChange={e => handleCheck(e, 'aptFor')} name='hypertensive' />} label="Hipertensos" />
+									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.aptFor.celiac} onChange={e => handleCheck(e, 'aptFor')} name='celiac' />} label={<Typography style={{ fontFamily: 'Signika' }}>Celíacos</Typography>} />
+									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.aptFor.diabetic} onChange={e => handleCheck(e, 'aptFor')} name='diabetic' />} label={<Typography style={{ fontFamily: 'Signika' }}>Diabéticos</Typography>} />
+									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.aptFor.hypertensive} onChange={e => handleCheck(e, 'aptFor')} name='hypertensive' />} label={<Typography style={{ fontFamily: 'Signika' }}>Hipertensos</Typography>} />
 								</div>
 							</div>
 							<div className={styles.type}>
 								Tipo comercio
 								<div className={styles.fields}>
-									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.comType.kiosk} onChange={e => handleCheck(e, 'comType')} name='kiosk' />} label="Kiosco" />
-									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.comType.supermarket} onChange={e => handleCheck(e, 'comType')} name='supermarket' />} label="Supermercado" />
-									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.comType.bakery} onChange={e => handleCheck(e, 'comType')} name='bakery' />} label="Panadería" />
-									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.comType.restaurant} onChange={e => handleCheck(e, 'comType')} name='restaurant' />} label="Restaurante" />
+									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.comType.kiosk} onChange={e => handleCheck(e, 'comType')} name='kiosk' />} label={<Typography style={{ fontFamily: 'Signika' }}>Kiosko</Typography>} />
+									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.comType.supermarket} onChange={e => handleCheck(e, 'comType')} name='supermarket' />} label={<Typography style={{ fontFamily: 'Signika' }}>Supermercado</Typography>} />
+									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.comType.bakery} onChange={e => handleCheck(e, 'comType')} name='bakery' />} label={<Typography style={{ fontFamily: 'Signika' }}>Panadería</Typography>} />
+									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.comType.restaurant} onChange={e => handleCheck(e, 'comType')} name='restaurant' />} label={<Typography style={{ fontFamily: 'Signika' }}>Restaurante</Typography>} />
 								</div>
 							</div>
 							<div className={styles.type}>
 								Tipo producto
 								<div className={styles.fields}>
-									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.category.food} onChange={e => handleCheck(e, 'category')} name='food' />} label="Comida" />
-									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.category.drink} onChange={e => handleCheck(e, 'category')} name='drink' />} label="Bebida" />
+									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.category.food} onChange={e => handleCheck(e, 'category')} name='food' />} label={<Typography style={{ fontFamily: 'Signika' }}>Comida</Typography>} />
+									<FormControlLabel control={<Checkbox sx={sxCheck} checked={filters.category.drink} onChange={e => handleCheck(e, 'category')} name='drink' />} label={<Typography style={{ fontFamily: 'Signika' }}>Bebida</Typography>} />
 								</div>
 							</div>
 						</motion.div>

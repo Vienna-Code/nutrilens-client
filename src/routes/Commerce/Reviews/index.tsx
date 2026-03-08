@@ -68,7 +68,7 @@ const Reviews = ({ positiveReviews, totalReviews, reviews, userReview }: { posit
 					<div className={styles.review} key={userReview.id}>
 						<div className={styles.user}>
 							<div className={styles.profilePic}>
-								<img src={userReview.user.profilePicture || `https://ui-avatars.com/api/?name=${userReview.user.username}&background=3b9c6a&color=1c1c1c&size=48&font-size=0.35&uppercase=true`} alt="" />
+								<img src={userReview.user.profilePicture ? `${import.meta.env.VITE_API_URL}/images/${userReview.user.profilePicture}` : `https://ui-avatars.com/api/?name=${userReview.user.username}&background=3b9c6a&color=1c1c1c&size=48&font-size=0.35&uppercase=true`} alt="" />
 							</div>
 							<div className={styles.info}>
 								<div className={styles.name}>

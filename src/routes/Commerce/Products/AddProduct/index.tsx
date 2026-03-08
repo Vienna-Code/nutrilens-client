@@ -4,7 +4,7 @@ import { PiCaretLeftBold, PiCheckFatBold } from 'react-icons/pi'
 import { useEffect, useState, type FormEvent } from 'react'
 import Api from '../../../../utils/api'
 import LoadingPage from '../../../../components/LoadingPage'
-import { Checkbox, FormControlLabel } from '@mui/material'
+import { Checkbox, FormControlLabel, Typography } from '@mui/material'
 import Tippy from '@tippyjs/react'
 import { motion } from 'framer-motion'
 import DropImage from '../../../../components/DropImage'
@@ -165,9 +165,9 @@ const AddProduct = () => {
 								<fieldset className={styles.mixed}>
 									<span className={styles.title}>Apto para *</span>
 									<div className={styles.checks}>
-										<FormControlLabel control={<Checkbox sx={sxCheck} name='aptFor1' />} value='celiac' label="Celíaco" onChange={resetError} />
-										<FormControlLabel control={<Checkbox sx={sxCheck} name='aptFor2' />} value='diabetic' label="Diabético" onChange={resetError} />
-										<FormControlLabel control={<Checkbox sx={sxCheck} name='aptFor3' />} value='hypertensive' label="Hipertenso" onChange={resetError} />
+										<FormControlLabel control={<Checkbox sx={sxCheck} name='aptFor1' />} value='celiac' label={<Typography style={{ fontFamily: 'Signika' }}>Celíaco</Typography>} onChange={resetError} />
+										<FormControlLabel control={<Checkbox sx={sxCheck} name='aptFor2' />} value='diabetic' label={<Typography style={{ fontFamily: 'Signika' }}>Diabético</Typography>} onChange={resetError} />
+										<FormControlLabel control={<Checkbox sx={sxCheck} name='aptFor3' />} value='hypertensive' label={<Typography style={{ fontFamily: 'Signika' }}>Hipertenso</Typography>} onChange={resetError} />
 									</div>
 								</fieldset>
 							</Tippy>

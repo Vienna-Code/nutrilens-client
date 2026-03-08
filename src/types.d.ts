@@ -116,6 +116,24 @@ type EditCommerce = {
 	verified?: boolean
 }
 
+type GetReport = {
+	id: number,
+	content: string,
+	image?: string,
+	resolved: null|boolean,
+	type: 'issue'|'verification'|'desverification'
+	user: RealUser,
+	date: string
+}
+
+type CommerceReport = GetReport & {
+	commerce: Pick<Commerce, 'id'|'name'|'type'>
+}
+
+type ProductReport = GetReport & {
+	product: Pick<Product, 'id'|'name'|'type'>
+}
+
 type AddReport = {
 	content: string,
 	image?: string
@@ -137,6 +155,10 @@ type Review = {
 	content: string,
 	useful: number,
 	visibility: 'public'|'private'|'unlisted'
+}
+
+type UserReview = Review & {
+	commerce: Pick<Commerce, 'id'|'name'|'type'>
 }
 
 type NewPost = {

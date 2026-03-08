@@ -8,6 +8,7 @@ import Api from '../../utils/api'
 import { motion, AnimatePresence } from 'framer-motion' 
 import { useAllStore } from '../../store/useAllStore'
 import SelectedCommerce from '../../components/SelectedCommerce'
+import { Checkbox, FormControlLabel, Typography } from '@mui/material'
 
 const Home = () => {
 	const [, navigate] = useLocation()
@@ -20,6 +21,10 @@ const Home = () => {
 	const setLocate = useAllStore(state => state.setLocate)
 	const located = useAllStore(state => state.located)
 	const selectedCommerce = useAllStore(state => state.selectedCommerce)
+	const unverifiedCommerces = useAllStore(state => state.unverifiedCommerces)
+	const unverifiedProducts = useAllStore(state => state.unverifiedProducts)
+	const setUnverifiedCommerces = useAllStore(state => state.setUnverifiedCommerces)
+	const setUnverifiedProducts = useAllStore(state => state.setUnverifiedProducts)
 	const menuRef = useRef<HTMLDivElement>(null)
 	
 	const handleSearch = () => {
@@ -39,6 +44,8 @@ const Home = () => {
 		Api.logOut()
 		.finally(() => setUser(null))
 	}
+
+	const sxCheck = { color: 'var(--ac-color)', '&.Mui-checked': { color: 'var(--ac-color)' }, alignSelf: 'flex-start' }
 	
 	return (
 		<div className={styles.home}>
@@ -79,7 +86,13 @@ const Home = () => {
 									</Link>
 								</li>
 							}
-							<li className={styles.last} onClick={handleSignOut}>
+							<li className={`${styles.label} ${styles.last}`}>
+								<FormControlLabel control={<Checkbox sx={sxCheck} name='unverifiedCommerces' checked={unverifiedCommerces} onChange={e => setUnverifiedCommerces(e.currentTarget.checked)} />} label={<Typography style={{ fontFamily: 'Signika', fontSize: '1em', padding: '7px' }}>Mostrar comercios sin verificar</Typography>} />
+							</li>
+							<li className={styles.label}>
+								<FormControlLabel control={<Checkbox sx={sxCheck} name='unverifiedProducts' checked={unverifiedProducts} onChange={e => setUnverifiedProducts(e.currentTarget.checked)} />} label={<Typography style={{ fontFamily: 'Signika', fontSize: '1em', padding: '7px' }}>Mostrar productos sin verificar</Typography>} />
+							</li>
+							<li className={styles.signOut} onClick={handleSignOut}>
 								<div className={styles.icon}><PiSignOutBold /></div> Cerrar sesión
 							</li>
 						</ul>

@@ -41,7 +41,7 @@ const SignUp = () => {
 					<div className={styles.icon}>
 						<PiCaretLeftBold />
 					</div>
-					Volver
+					Atrás
 				</Link>
 			</span>
 			<h2>Crear una cuenta</h2>

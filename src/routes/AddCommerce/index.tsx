@@ -6,7 +6,7 @@ import Api from '../../utils/api'
 import LoadingChild from '../../components/LoadingChild'
 import { PiCaretLeftBold, PiCheckFatBold } from 'react-icons/pi'
 import { Link, useLocation } from 'wouter'
-import { Checkbox, FormControlLabel } from '@mui/material'
+import { Checkbox, FormControlLabel, Typography } from '@mui/material'
 import Tippy from '@tippyjs/react'
 import LoadingPage from '../../components/LoadingPage'
 import { motion } from 'framer-motion'
@@ -294,9 +294,9 @@ const AddCommerce = () => {
 						<span className={styles.title}>Métodos de pago *</span>
 						<Tippy content={error.message} visible={error.field === 'paymentMethods'} placement='top-start' arrow={true} inertia={true} animation='scale'>
 							<div className={styles.checks}>
-								<FormControlLabel control={<Checkbox sx={sxCheck} name='paymentMethods1' />} value='efectivo' label="Efectivo" onChange={resetError} />
-								<FormControlLabel control={<Checkbox sx={sxCheck} name='paymentMethods2' />} value='debito' label="Débito" onChange={resetError} />
-								<FormControlLabel control={<Checkbox sx={sxCheck} name='paymentMethods3' />} value='credito' label="Crédito" onChange={resetError} />
+								<FormControlLabel control={<Checkbox sx={sxCheck} name='paymentMethods1' />} value='efectivo' label={<Typography style={{ fontFamily: 'Signika' }}>Efectivo</Typography>} onChange={resetError} />
+								<FormControlLabel control={<Checkbox sx={sxCheck} name='paymentMethods2' />} value='debito' label={<Typography style={{ fontFamily: 'Signika' }}>Débito</Typography>} onChange={resetError} />
+								<FormControlLabel control={<Checkbox sx={sxCheck} name='paymentMethods3' />} value='credito' label={<Typography style={{ fontFamily: 'Signika' }}>Crédito</Typography>} onChange={resetError} />
 							</div>
 						</Tippy>
 					</fieldset>
@@ -332,14 +332,14 @@ const AddCommerce = () => {
 						<div className={styles.hours}>
 							<fieldset>
 								<label htmlFor="opensAt">Abre a las</label>
-								<input id='opensAt' type="time" placeholder=' ' value={schedules[scheduleDay === '' ? 1 : +scheduleDay].opensAt} onChange={handleOpensAt} step="1800" disabled={scheduleDay === ''} />
+								<input id='opensAt' type="time" placeholder=' ' value={schedules[scheduleDay === '' ? 1 : +scheduleDay].opensAt} onChange={handleOpensAt} step="1800" disabled={scheduleDay === '' || schedules[scheduleDay === '' ? 1 : +scheduleDay].closed} />
 							</fieldset>
 							<fieldset>
 								<label htmlFor="closesAt">Cierra a las</label>
-								<input id='closesAt' type="time" placeholder=' ' value={schedules[scheduleDay === '' ? 1 : +scheduleDay].closesAt} onChange={handleClosesAt} step="1800" disabled={scheduleDay === ''} />
+								<input id='closesAt' type="time" placeholder=' ' value={schedules[scheduleDay === '' ? 1 : +scheduleDay].closesAt} onChange={handleClosesAt} step="1800" disabled={scheduleDay === '' || schedules[scheduleDay === '' ? 1 : +scheduleDay].closed} />
 							</fieldset>
 							<div className={styles.closed}>
-								<FormControlLabel control={<Checkbox sx={sxCheck} name='closed' onChange={handleScheduleClosed} checked={schedules[scheduleDay === '' ? 1 : +scheduleDay].closed} />} value={false} label="Cerrado todo el día" />
+								<FormControlLabel control={<Checkbox sx={sxCheck} name='closed' onChange={handleScheduleClosed} checked={schedules[scheduleDay === '' ? 1 : +scheduleDay].closed} />} value={false} label={<Typography style={{ fontFamily: 'Signika' }}>Cerrado todo el día</Typography>} />
 							</div>
 						</div>
 					</fieldset>

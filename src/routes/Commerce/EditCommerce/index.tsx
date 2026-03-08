@@ -11,6 +11,8 @@ import Tippy from '@tippyjs/react'
 import LoadingPage from '../../../components/LoadingPage'
 import { motion } from 'framer-motion'
 import DropImage from '../../../components/DropImage'
+import { useAllStore } from '../../../store/useAllStore'
+import NotFound from '../../../components/NotFound'
 
 const commerceTypes = [
 	'kiosk',
@@ -21,7 +23,8 @@ const commerceTypes = [
 
 const EditCommerce = () => {
 	const { id } = useParams()
-	const [commerce, setCommerce] = useState<Commerce>()
+	const user = useAllStore(state => state.user)
+	const [commerce, setCommerce] = useState<Commerce|null>()
 	const [locationList, setLocationList] = useState<{ coords: LatLngTuple, text: string, type: string, name?: string }[]|null|undefined>()
 	const [pendingSelection, setPendingSelection] = useState(true)
 	const [selectedLocation, setSelectedLocation] = useState<[{ coords: LatLngTuple, text: string, type?: typeof commerceTypes[number] }]|undefined>()
@@ -87,9 +90,7 @@ const EditCommerce = () => {
 					closesAt: parseClosesAt
 				}
 			}))
-
-			console.log(data.data)
-		})
+		}).catch(() => setCommerce(null))
 	}, [id])
 	
 	useEffect(() => {
@@ -122,6 +123,12 @@ const EditCommerce = () => {
 		
 		return () => clearTimeout(timer)
 	}, [search])
+
+	useEffect(() => {
+		if (successCounter === 0) navigate('/')
+	}, [successCounter])
+
+	if (user === 'guest' || !user || !user.roles.includes('ROLE_ADMIN') && user.userRank !== 'platinum') return <NotFound icon='prohibit' title='Rango insuficiente' message='Debes ser de rango platino para modificar un comercio' buttonIcon='commerce' buttonText='Volver al comercio' link='/' />
 	
 	const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
 		if (error) resetError()
@@ -235,10 +242,6 @@ const EditCommerce = () => {
 		})
 	}
 
-	useEffect(() => {
-		if (successCounter === 0) navigate('/')
-	}, [successCounter])
-
 	const sxCheck = { color: 'var(--ac-color)', '&.Mui-checked': { color: 'var(--ac-color)' } }
 	
 	return (
@@ -254,9 +257,9 @@ const EditCommerce = () => {
 					<motion.button initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1, transition: { delay: 0.8 } }} onClick={() => navigate('/')}>Volver al inicio ({successCounter})</motion.button>
 				</div>
 			}
-			{!commerce || loading ?
+			{commerce === undefined || loading ?
 				<LoadingPage absolute />
-			:
+			: commerce ?
 				<>
 					<Link to='/' className={styles.back}>
 						<div className={styles.icon}>
@@ -383,6 +386,8 @@ const EditCommerce = () => {
 						</div>
 					</form>
 				</>
+			:
+				<NotFound icon='404' title='Comercio no encontrado' message='Verifica que la URL sea la correcta o vuelve a buscar el comercio' buttonIcon='search' buttonText='Buscar' link='~/search' />
 			}
 		</div>
 	)

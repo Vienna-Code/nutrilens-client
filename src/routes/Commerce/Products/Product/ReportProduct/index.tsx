@@ -7,11 +7,12 @@ import { PiCaretLeftBold, PiCheckFatBold } from 'react-icons/pi'
 import Tippy from '@tippyjs/react'
 import DropImage from '../../../../../components/DropImage'
 import { motion } from 'framer-motion'
+import NotFound from '../../../../../components/NotFound'
 
 const ReportProduct = () => {
-	const { pid } = useParams()
+	const { id, pid } = useParams()
 	const [, navigate] = useLocation()
-	const [product, setProduct] = useState<Product>()
+	const [product, setProduct] = useState<Product|null>()
 	const [images, setImages] = useState<Images<File>>([])
 	const [loading, setLoading] = useState(false)
 	const [success, setSuccess] = useState(false)
@@ -20,7 +21,7 @@ const ReportProduct = () => {
 
 	useEffect(() => {
 		if (pid && !product) {
-			Api.getProduct(+pid).then(setProduct)
+			Api.getProduct(+pid).then(setProduct).catch(() => setProduct(null))
 		}
 	}, [pid])
 
@@ -70,7 +71,7 @@ const ReportProduct = () => {
 				</div>
 			}
 			{product === undefined || loading ? <LoadingPage absolute />
-			:
+			: product ?
 				<>
 					<Link to='/'>
 						<div className={styles.icon}>
@@ -95,6 +96,8 @@ const ReportProduct = () => {
 						<button type='submit'>Reportar</button>
 					</form>
 				</>
+			: product === null &&
+				<NotFound icon='404' title='Producto no encontrado' message='Verifica que la URL sea correcta o vuelve al comercio' buttonIcon='commerce' buttonText='Volver' link={`~/commerce/${id}`} />
 			}
 		</div>
 	)

@@ -165,7 +165,7 @@ const EditReview = () => {
 					</form>
 				</>
 			: commerce === null ?
-				<NotFound icon='404' title='Comercio no encontrado' message='Verifica que la URL sea correcta o vuelve a buscar el comercio' buttonIcon='commerce' buttonText='Buscar comercios' link='~/search' />
+				<NotFound icon='404' title='Comercio no encontrado' message='Verifica que la URL sea correcta o vuelve a buscar el comercio' buttonIcon='search' buttonText='Buscar' link='~/search' />
 			:
 				<NotFound icon='404' title='Reseña no encontrada' message='No tienes ninguna reseña creada para este comercio' buttonIcon='edit' buttonText='Crear reseña' link='/addReview' />
 			}

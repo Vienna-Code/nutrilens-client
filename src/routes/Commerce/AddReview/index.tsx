@@ -139,7 +139,7 @@ const AddReview = () => {
 					</form>
 				</>
 			:
-				<NotFound icon='404' title='Comercio no encontrado' message='Verifica que la URL sea correcta o vuelve a buscar el comercio' buttonIcon='commerce' buttonText='Buscar comercios' link='~/search' />
+				<NotFound icon='404' title='Comercio no encontrado' message='Verifica que la URL sea correcta o vuelve a buscar el comercio' buttonIcon='search' buttonText='Buscar' link='~/search' />
 			}
 			
 		</div>

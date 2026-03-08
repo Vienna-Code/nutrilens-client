@@ -52,7 +52,7 @@ const Comment = ({ comment, sub }: { comment: UserComment, sub?: boolean }) => {
 		<div className={styles.comment}>
 			<div className={styles.userInfo}>
 				<div className={styles.profilePic} onClick={() => navigate(`~/user/${user.id}`)}>
-					<img src={user.profilePicture || `https://ui-avatars.com/api/?name=${user.username}&background=3b9c6a&color=1c1c1c&size=48&font-size=0.35&uppercase=true`} alt="" />
+					<img src={user.profilePicture ? `${import.meta.env.VITE_API_URL}/images/${user.profilePicture}` : `https://ui-avatars.com/api/?name=${user.username}&background=3b9c6a&color=1c1c1c&size=48&font-size=0.35&uppercase=true`} alt="" />
 				</div>
 				<div className={styles.info}>
 					<div className={styles.name}>

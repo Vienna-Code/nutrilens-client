@@ -26,6 +26,13 @@ import EditPost from './routes/Community/Post/EditPost'
 import EditCommerce from './routes/Commerce/EditCommerce'
 import ReportCommerce from './routes/Commerce/ReportCommerce'
 import Dashboard from './routes/Dashboard'
+import ProfileCommerces from './routes/Profile/ProfileCommerces'
+import ProfileProducts from './routes/Profile/ProfileProducts'
+import ProfilePosts from './routes/Profile/ProfilePosts'
+import ProfileReviews from './routes/Profile/ProfileReviews'
+import CommercesReports from './routes/Dashboard/CommercesReports'
+import ProductsReports from './routes/Dashboard/ProductsReports'
+import DashboardCommerces from './routes/Dashboard/DashboardCommerces'
 
 const App = () => {
 	const user = useAllStore(state => state.user)
@@ -81,7 +88,15 @@ const App = () => {
 					</Route>
 				</Route>
 				<Route path={'/add'} component={AddCommerce} />
-				<Route path={'/profile'} component={Profile} />
+				<Route path={'/profile'} nest>
+					<Switch>
+						<Route path={'/'} component={Profile} />
+						<Route path={'/commerces'} component={ProfileCommerces} />
+						<Route path={'/products'} component={ProfileProducts} />
+						<Route path={'/reviews'} component={ProfileReviews} />
+						<Route path={'/posts'} component={ProfilePosts} />
+					</Switch>
+				</Route>
 				<Route path={'/community'} nest>
 					<Switch>
 						<Route path={'/'} component={Community} />
@@ -97,6 +112,19 @@ const App = () => {
 				<Route path={'/dashboard'} nest>
 					<Switch>
 						<Route path={'/'} component={Dashboard} />
+						<Route path={'/commercesReports'} nest>
+							<Switch>
+								<Route path={'/'} component={CommercesReports} />
+								<Route path={'/:id'} component={CommercesReports} />
+							</Switch>
+						</Route>
+						<Route path={'/productsReports'} nest>
+							<Switch>
+								<Route path={'/'} component={ProductsReports} />
+								<Route path={'/:id'} component={ProductsReports} />
+							</Switch>
+						</Route>
+						<Route path={'/commerces'} component={DashboardCommerces} />
 					</Switch>
 				</Route>
 			</Switch>

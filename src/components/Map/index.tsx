@@ -77,6 +77,7 @@ const Map = ({ markers, center, disableLocation, panTo }: { markers?: { coords: 
 	const setCommerces = useAllStore(state => state.setCommerces)
 	const selectedCommerce = useAllStore(state => state.selectedCommerce)
 	const setSelectedCommerce = useAllStore(state => state.setSelectedCommerce)
+	const unverifiedCommerces = useAllStore(state => state.unverifiedCommerces)
 	const [localPan, setLocalPan] = useState<LatLngTuple>()
 	const [zoom, setZoom] = useState<number>()
 	
@@ -85,7 +86,7 @@ const Map = ({ markers, center, disableLocation, panTo }: { markers?: { coords: 
 		if (mapRef.current && mapRef.current.getZoom() < 13) return setCommerces([])
 		if (mapRef.current) setZoom(mapRef.current.getZoom())
 
-		Api.getCommerces({ lat: [currentBoundaries.southWest.lat, currentBoundaries.northEast.lat], lon: [currentBoundaries.southWest.lon, currentBoundaries.northEast.lon], unverified: true })
+		Api.getCommerces({ lat: [currentBoundaries.southWest.lat, currentBoundaries.northEast.lat], lon: [currentBoundaries.southWest.lon, currentBoundaries.northEast.lon], unverified: unverifiedCommerces })
 		.then(data => {
 			setCommerces(data.data)
 		})

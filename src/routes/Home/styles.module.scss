@@ -51,7 +51,7 @@
 			list-style: none;
 
 			li {
-				a {
+				a, &.signOut, &.label {
 					display: flex;
 					align-items: center;
 					gap: 0.5em;
@@ -60,7 +60,7 @@
 					color: var(--tx-color);
 					text-decoration: none;
 
-					&:hover {
+					&:hover:not(&.label) {
 						background-color: var(--ac-color);
 						color: var(--pr-color);
 					}
@@ -68,18 +68,6 @@
 
 				&.last {
 					margin-top: auto;
-					display: flex;
-					align-items: center;
-					gap: 0.5em;
-					padding: 1em 1.5em;
-					transition: 0.2s ease-out;
-					color: var(--tx-color);
-					text-decoration: none;
-
-					&:hover {
-						background-color: var(--ac-color);
-						color: var(--pr-color);
-					}
 				}
 
 				.icon {

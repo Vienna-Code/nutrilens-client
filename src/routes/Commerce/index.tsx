@@ -10,15 +10,17 @@ import GeneralInfo from './GeneralInfo'
 import { useAllStore } from '../../store/useAllStore'
 import Tippy from '@tippyjs/react'
 import Reviews from './Reviews'
+import NotFound from '../../components/NotFound'
 
 const Commerce = () => {
 	const { id } = useParams()
 	const user = useAllStore(state => state.user)
+	const selectedCommerce = useAllStore(state => state.selectedCommerce)
 	const [commerce, setCommerce] = useState<Commerce|null>()
 	const [reviews, setReviews] = useState<Review[]>()
 	const [userReview, setUserReview] = useState<Review>()
 	const [tab, setTab] = useState(0)
-	const selectedCommerce = useAllStore(state => state.selectedCommerce)
+	const [localVerify, setLocalVerify] = useState<boolean>()
 
 	useEffect(() => {
 		if (commerce !== undefined) return
@@ -26,7 +28,7 @@ const Commerce = () => {
 		Api.getCommerce(id as string)
 		.then(data => {
 			setCommerce(data.data)
-		})
+		}).catch(() => setCommerce(null))
 
 		Api.getReviews(id as string)
 		.then(data => {
@@ -61,7 +63,8 @@ const Commerce = () => {
 	
 	return (
 		<div className={styles.location}>
-			{commerce ?
+			{commerce === undefined ? <LoadingPage />
+			: commerce ?
 				<>
 					<Link to={selectedCommerce ? '~/' : '~/search'} className={styles.back}>
 						<div className={styles.icon}>
@@ -75,9 +78,13 @@ const Commerce = () => {
 					<div className={styles.info}>
 						<div className={styles.name}>
 							{commerce.name}
-							<Tippy content={commerce.verified ? 'Comercio verificado' : 'Comercio no verificado'}>
-								<div className={`${styles.icon} ${commerce.verified ? styles.verified : ''}`}>
-									{commerce.verified ?
+							<Tippy content={localVerify !== undefined ? (localVerify ? 'Comercio verificado' : 'Comercio no verificado') : commerce.verified ? 'Comercio verificado' : 'Comercio no verificado'}>
+								<div className={`${styles.icon} ${localVerify !== undefined ? (localVerify ? styles.verified : '') : commerce.verified ? styles.verified : ''}`}>
+									{localVerify !== undefined ? (localVerify ?
+										<PiSealCheckBold />
+									:
+										<PiSealBold />
+									) : commerce.verified ?
 										<PiSealCheckBold />
 									:
 										<PiSealBold />
@@ -132,14 +139,14 @@ const Commerce = () => {
 							</div>
 						</div>
 						{tab === 0 ?
-							<GeneralInfo commerce={commerce} />
+							<GeneralInfo commerce={commerce} setLocalVerify={setLocalVerify} />
 						:
 							reviews && <Reviews positiveReviews={commerce.positiveReviews} totalReviews={commerce.totalReviews} reviews={reviews} userReview={userReview} />
 						}
 					</div>
 				</>
 			:
-				<LoadingPage />
+				<NotFound icon='404' title='Comercio no encontrado' message='Verifica que la URL sea correcta o vuelve a buscar el comercio' buttonIcon='search' buttonText='Buscar' link='~/search' />
 			}
 		</div>
 	)

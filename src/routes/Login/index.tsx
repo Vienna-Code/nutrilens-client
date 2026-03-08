@@ -20,7 +20,7 @@ const Login = () => {
 	return (
 		<div className={styles.login}>
 			<div className={styles.logo}>
-				<img src="/nutrilens_isotipo_color.png" alt="" />
+				<img src="/nutrilens_logo_color.png" alt="" />
 			</div>
 			<div className={styles.options}>
 				<button onClick={() => navigate('/signin')}>
