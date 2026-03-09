@@ -1,6 +1,6 @@
 import type { LatLngTuple } from 'leaflet'
 
-const API_URL = 'http://localhost:4173'
+const API_URL = import.meta.env.VITE_API_URL as string
 const OSRM_URL = import.meta.env.VITE_OSRM_URL as string
 const NOMINATIM_URL = import.meta.env.VITE_NOMINATIM_URL as string
 
