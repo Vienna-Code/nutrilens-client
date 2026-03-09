@@ -25,11 +25,11 @@
 		grid-template-columns: 1fr 1fr;
 		gap: 1em;
 
-		.reports, .posts {
+		.reports {
 			grid-column: span 2;
 		}
 
-		.commerces, .products, .posts, .reports {
+		.commerces, .products, .posts, .reports, .users {
 			width: 100%;
 			background-color: var(--tx-color-op);
 			height: max-content;
@@ -44,6 +44,23 @@
 				display: flex;
 				flex-direction: column;
 			}
+		}
+	}
+
+	button {
+		width: 100%;
+		padding: 0.7em;
+		background-color: var(--ac-color);
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+		color: var(--pr-color);
+		font-size: 1.2em;
+		clip-path: polygon(0.8em 0, 100% 0, 100% calc(100% - 0.8em), calc(100% - 0.8em) 100%, 0 100%, 0 0.8em);
+
+		.icon {
+			display: flex;
+			align-items: center;
 		}
 	}
 }

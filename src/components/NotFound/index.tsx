@@ -1,4 +1,4 @@
-import { PiAvocadoBold, PiBeerBottleBold, PiBeerSteinBold, PiBowlFoodBold, PiBrandyBold, PiBreadBold, PiCaretLeftBold, PiCarrotBold, PiChatCenteredDotsBold, PiCheeseBold, PiCherriesBold, PiCookieBold, PiFishBold, PiFlagBannerBold, PiForkKnifeBold, PiHamburgerBold, PiIceCreamBold, PiLinkBreakBold, PiMagnifyingGlassBold, PiMapPinBold, PiOnigiriBold, PiPencilBold, PiPizzaBold, PiPlusBold, PiProhibitBold, PiShrimpBold, PiSignInBold, PiStorefrontBold, PiThumbsDownBold, PiUsersThreeBold, PiWarningBold } from 'react-icons/pi'
+import { PiAvocadoBold, PiBeerBottleBold, PiBeerSteinBold, PiBowlFoodBold, PiBrandyBold, PiBreadBold, PiCaretLeftBold, PiCarrotBold, PiChatCenteredDotsBold, PiCheeseBold, PiCherriesBold, PiCookieBold, PiFishBold, PiFlagBannerBold, PiForkKnifeBold, PiHamburgerBold, PiIceCreamBold, PiLinkBreakBold, PiMagnifyingGlassBold, PiMapPinBold, PiOnigiriBold, PiPencilBold, PiPizzaBold, PiPlusBold, PiProhibitBold, PiShrimpBold, PiSignInBold, PiStorefrontBold, PiThumbsDownBold, PiUsersBold, PiUsersThreeBold, PiWarningBold } from 'react-icons/pi'
 import styles from './styles.module.scss'
 import { Link, useLocation } from 'wouter'
 
@@ -29,7 +29,8 @@ const iconDict = {
 	'post': <PiThumbsDownBold />,
 	'product': <PiForkKnifeBold />,
 	'review': <PiChatCenteredDotsBold />,
-	'report': <PiFlagBannerBold />
+	'report': <PiFlagBannerBold />,
+	'users': <PiUsersBold />
 }
 
 const buttonIconDict = {

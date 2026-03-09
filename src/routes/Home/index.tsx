@@ -52,7 +52,10 @@ const Home = () => {
 
 	const handleSignOut = () => {
 		Api.logOut()
-		.finally(() => setUser(null))
+		.finally(() => {
+			setUser(null)
+			setRouteTo(undefined)
+		})
 	}
 
 	const sxCheck = { color: 'var(--ac-color)', '&.Mui-checked': { color: 'var(--ac-color)' }, alignSelf: 'flex-start' }
@@ -134,11 +137,13 @@ const Home = () => {
 								<Icon color='var(--pr-color)' />
 							</div>
 						</button>
-						<button onClick={() => navigate('/add')}>
-							<div className={styles.icon}>
-								<PiPlusBold />
-							</div>
-						</button>
+						{user !== 'guest' &&
+							<button onClick={() => navigate('/add')}>
+								<div className={styles.icon}>
+									<PiPlusBold />
+								</div>
+							</button>
+						}
 						<button onClick={() => setLocate(!locate)}>
 							<div className={styles.icon}>
 								{located ? <PiGpsFixBold /> : <PiGpsBold />}

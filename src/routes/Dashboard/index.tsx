@@ -1,6 +1,6 @@
-import { Link } from 'wouter'
+import { Link, useLocation } from 'wouter'
 import styles from './styles.module.scss'
-import { PiCaretLeftBold } from 'react-icons/pi'
+import { PiCaretLeftBold, PiPlusBold } from 'react-icons/pi'
 import { useEffect, useState } from 'react'
 import Api from '../../utils/api'
 import LoadingPage from '../../components/LoadingPage'
@@ -12,6 +12,7 @@ const Dashboard = () => {
 	const [commercesReportsCount, setCommercesReportsCount] = useState<number>()
 	const [productsReportsCount, setProductsReportsCount] = useState<number>()
 	const [usersCount, setUsersCount] = useState<number>()
+	const [, navigate] = useLocation()
 
 	useEffect(() => {
 		if (!commercesCount) Api.getCommercesStats().then(data => setCommercesCount(data.total))
@@ -67,7 +68,19 @@ const Dashboard = () => {
 							</div>
 							<Link to='/posts'>posts</Link>
 						</div>
+						<div className={styles.users}>
+							<div className={styles.count}>
+								{usersCount}
+							</div>
+							<Link to='/users'>usuarios</Link>
+						</div>
 					</div>
+					<button onClick={() => navigate('/users/add')}>
+						<div className={styles.icon}>
+							<PiPlusBold />
+						</div>
+						Añadir usuario
+					</button>
 				</>
 			}
 		</div>

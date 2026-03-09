@@ -1,6 +1,6 @@
 import type { LatLngTuple } from 'leaflet'
 
-const API_URL = import.meta.env.VITE_API_URL as string
+const API_URL = 'http://localhost:4173'
 const OSRM_URL = import.meta.env.VITE_OSRM_URL as string
 const NOMINATIM_URL = import.meta.env.VITE_NOMINATIM_URL as string
 
@@ -178,7 +178,7 @@ class Api {
 		.then(data => data.data)
 	}
 
-	public static getUsers = () => {
+	public static getUsers = (params?: { username?: string, email?: string, orderBy?: string }) => {
 		const options: RequestInit = {
 			method: 'GET',
 			headers: {
@@ -186,8 +186,12 @@ class Api {
 			},
 			credentials: 'include'
 		}
+
+		const parseParams = params ? Object.entries(params).map(([key, value]) => {
+			return value ? `${key}=${value}` : ''
+		}) : undefined
 		
-		return this.newFetch('/users', options)
+		return this.newFetch(`/users${parseParams ? `?${parseParams.join('&')}` : ''}`, options)
 		.then(data => data.data)
 	}
 

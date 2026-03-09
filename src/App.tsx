@@ -35,6 +35,8 @@ import ProductsReports from './routes/Dashboard/ProductsReports'
 import DashboardCommerces from './routes/Dashboard/DashboardCommerces'
 import DashboardProducts from './routes/Dashboard/DashboardProducts'
 import DashboardPosts from './routes/Dashboard/DashboardPosts'
+import DashboardUsers from './routes/Dashboard/DashboardUsers'
+import AddUser from './routes/Dashboard/DashboardUsers/AddUser'
 
 const App = () => {
 	const user = useAllStore(state => state.user)
@@ -129,6 +131,12 @@ const App = () => {
 						<Route path={'/commerces'} component={DashboardCommerces} />
 						<Route path={'/products'} component={DashboardProducts} />
 						<Route path={'/posts'} component={DashboardPosts} />
+						<Route path={'/users'} nest>
+							<Switch>
+								<Route path={'/'} component={DashboardUsers} />
+								<Route path={'/add'} component={AddUser} />
+							</Switch>
+						</Route>
 					</Switch>
 				</Route>
 			</Switch>
