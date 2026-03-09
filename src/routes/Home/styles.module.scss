@@ -132,4 +132,37 @@
 			}
 		}
 	}
+	
+	.routeTo {
+		position: absolute;
+		z-index: 10;
+		background-color: var(--pr-color);
+		padding: 1em;
+		border: 3px solid var(--ac-color);
+		top: 0;
+		right: 1em;
+		display: flex;
+		flex-direction: column;
+		gap: 1em;
+
+		.info {
+			display: flex;
+			align-items: center;
+			gap: 0.5em;
+
+			.icon {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 1.1em;
+			}
+		}
+
+		button {
+			padding: 0.5em 1em;
+			background-color: var(--ac-color);
+			color: var(--pr-color);
+			clip-path: polygon(0.7em 0, 100% 0, 100% calc(100% - 0.7em), calc(100% - 0.7em) 100%, 0 100%, 0 0.7em);
+		}
+	}
 }

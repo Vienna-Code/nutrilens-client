@@ -9,6 +9,9 @@ interface State {
 	located: boolean,
 	userLocation?: LatLng,
 	selectedCommerce?: string,
+	routeTo?: Commerce,
+	renderRoute: boolean,
+	summary?: { totalDistance: number, totalTime: number },
 	unverifiedCommerces: boolean,
 	unverifiedProducts: boolean,
 	setUser: (user: User) => void,
@@ -17,6 +20,9 @@ interface State {
 	setLocated: (located: boolean) => void,
 	setUserLocation: (userLocation: LatLng) => void,
 	setSelectedCommerce: (id?: string) => void,
+	setRouteTo: (routeTo?: Commerce) => void,
+	setRenderRoute: (renderRoute: boolean) => void,
+	setSummary: (summary?: { totalDistance: number, totalTime: number }) => void,
 	setUnverifiedCommerces: (unverifiedCommerces: boolean) => void,
 	setUnverifiedProducts: (unverifiedProducts: boolean) => void
 }
@@ -28,6 +34,9 @@ export const useAllStore = create<State>()(persist((set) => ({
 	located: false,
 	userLocation: undefined,
 	selectedCommerce: undefined,
+	routeTo: undefined,
+	renderRoute: false,
+	summary: undefined,
 	unverifiedCommerces: true,
 	unverifiedProducts: true,
 	setUser: (user) => {
@@ -47,6 +56,15 @@ export const useAllStore = create<State>()(persist((set) => ({
 	},
 	setSelectedCommerce: (selectedCommerce) => {
 		set({ selectedCommerce })
+	},
+	setRouteTo: (routeTo) => {
+		set({ routeTo })
+	},
+	setRenderRoute: (renderRoute) => {
+		set({ renderRoute })
+	},
+	setSummary: (summary) => {
+		set({ summary })
 	},
 	setUnverifiedCommerces: (unverifiedCommerces) => {
 		set({ unverifiedCommerces })

@@ -7,7 +7,7 @@ import { Reorder } from 'framer-motion'
 type FileType = File
 type FileType2 = File|string
 
-const DropImage = <ImageType extends FileType|FileType2>({ images, setImages, type, label, alt = false, square = true, limit }: { images: Images<ImageType>, setImages: Dispatch<SetStateAction<Images<ImageType>>>, type: string, label: string, alt?: boolean, square?: boolean, limit?: number }) => {
+const DropImage = <ImageType extends FileType|FileType2>({ images, setImages, type, label, alt = false, square = true, limit, disabled = false }: { images: Images<ImageType>, setImages: Dispatch<SetStateAction<Images<ImageType>>>, type: string, label: string, alt?: boolean, square?: boolean, limit?: number, disabled?: boolean }) => {
 	const inputRef = useRef<HTMLInputElement>(null)
 
 	const handleDragEnter = (e: DragEvent<HTMLDivElement>) => {
@@ -81,7 +81,7 @@ const DropImage = <ImageType extends FileType|FileType2>({ images, setImages, ty
 	}
 	
 	return (
-		<div className={styles.dropImage}>
+		<div className={`${styles.dropImage} ${disabled ? styles.disabled : ''}`}>
 			<div className={styles.dropArea} onClick={() => inputRef.current?.click()} onDragEnter={handleDragEnter}
 			onDragLeave={handleMouseLeave} onDragOver={handleDragOver} onDrop={handleDrop}>
 				<label htmlFor="file">{label}</label>
@@ -92,7 +92,7 @@ const DropImage = <ImageType extends FileType|FileType2>({ images, setImages, ty
 					<p>Arrastra y suelta imágenes {alt ? 'para el' : 'del'} {type}</p>
 					<span>O haz click para subirlas desde tu dispositivo</span>
 				</div>
-				<input type="file" onChange={handleFile} ref={inputRef} accept='image/*' id='file' />
+				<input type="file" onChange={handleFile} ref={inputRef} accept='image/*' id='file' disabled={disabled} />
 			</div>
 			{images.length > 0 &&
 				<Reorder.Group axis='x' values={images} onReorder={setImages} as='div' className={styles.imageList}>

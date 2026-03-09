@@ -7,6 +7,7 @@ import './styles.scss'
 import LocateUser from '../LocateUser'
 import Api from '../../utils/api'
 import { useAllStore } from '../../store/useAllStore'
+import Routing from '../Routing'
 
 const InnerComponent = ({ setBoundaries }: { setBoundaries: (set: { southWest: { lat: number, lon: number }, northEast: { lat: number, lon: number } }) => void }) => {
 	const map = useMap()
@@ -78,6 +79,9 @@ const Map = ({ markers, center, disableLocation, panTo }: { markers?: { coords: 
 	const selectedCommerce = useAllStore(state => state.selectedCommerce)
 	const setSelectedCommerce = useAllStore(state => state.setSelectedCommerce)
 	const unverifiedCommerces = useAllStore(state => state.unverifiedCommerces)
+	const routeTo = useAllStore(state => state.routeTo)
+	const userLocation = useAllStore(state => state.userLocation)
+	const renderRoute = useAllStore(state => state.renderRoute)
 	const [localPan, setLocalPan] = useState<LatLngTuple>()
 	const [zoom, setZoom] = useState<number>()
 	
@@ -113,7 +117,7 @@ const Map = ({ markers, center, disableLocation, panTo }: { markers?: { coords: 
 					
 				})}
 				<PanTo coords={localPan || panTo} zoom={localPan && zoom} />
-				{/* <Routing origin={markerCoords} destination={destCoords} /> */}
+				{routeTo && userLocation && renderRoute && <Routing origin={[userLocation.lat, userLocation.lng]} destination={[routeTo.coordsLat, routeTo.coordsLon]} />}
 			</MapContainer>
 		</div>
 	)

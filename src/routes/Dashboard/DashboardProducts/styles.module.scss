@@ -1,4 +1,4 @@
-.dashboardCommerces {
+.dashboardProducts {
 	width: 100%;
 	min-height: 100dvh;
 	padding: 1.5em;
@@ -70,7 +70,7 @@
 			flex-direction: column;
 			gap: 1em;
 
-			.commerce {
+			.product {
 				width: 100%;
 				background-color: var(--tx-color-op);
 				padding: 1.5em;
@@ -131,7 +131,7 @@
 		}
 	}
 
-	.commerces {
+	.products {
 		width: 100%;
 		height: max-content;
 		display: flex;
@@ -139,7 +139,7 @@
 		gap: 1em;
 		padding-block: 1em;
 
-		.commerce {
+		.product {
 			width: 100%;
 			background-color: var(--tx-color-op);
 			padding: 1.5em;

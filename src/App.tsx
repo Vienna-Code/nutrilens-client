@@ -33,6 +33,8 @@ import ProfileReviews from './routes/Profile/ProfileReviews'
 import CommercesReports from './routes/Dashboard/CommercesReports'
 import ProductsReports from './routes/Dashboard/ProductsReports'
 import DashboardCommerces from './routes/Dashboard/DashboardCommerces'
+import DashboardProducts from './routes/Dashboard/DashboardProducts'
+import DashboardPosts from './routes/Dashboard/DashboardPosts'
 
 const App = () => {
 	const user = useAllStore(state => state.user)
@@ -125,6 +127,8 @@ const App = () => {
 							</Switch>
 						</Route>
 						<Route path={'/commerces'} component={DashboardCommerces} />
+						<Route path={'/products'} component={DashboardProducts} />
+						<Route path={'/posts'} component={DashboardPosts} />
 					</Switch>
 				</Route>
 			</Switch>

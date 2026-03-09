@@ -340,6 +340,19 @@ class Api {
 		.then(data => data)
 	}
 
+	public static deleteCommerce = (cid: string) => {
+		const options: RequestInit = {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include'
+		}
+
+		return this.newFetch(`/commerces/${cid}`, options)
+		.then(data => data)
+	}
+
 	public static verifyCommerce = (cid: string, verify: boolean) => {
 		const options: RequestInit = {
 			method: 'POST',
@@ -428,7 +441,7 @@ class Api {
 		.then(data => data.data)
 	}
 
-	public static getSearchProducts = (searchProduct: SearchProduct) => {
+	public static getSearchProducts = (searchProduct?: SearchProduct) => {
 		const options: RequestInit = {
 			method: 'GET',
 			headers: {
@@ -437,14 +450,14 @@ class Api {
 			credentials: 'include'
 		}
 
-		const parseOptions = Object.entries(searchProduct).filter(([,value]) => value).map(([key, value]) => {
+		const parseOptions = searchProduct ? Object.entries(searchProduct).filter(([,value]) => value).map(([key, value]) => {
 			if (typeof value === 'object') return `${key}=${value.join(',')}`
 			if (key === 'unverified') return `${key}`
 
 			return `${key}=${value}`
-		})
+		}) : undefined
 
-		return this.newFetch(`/products?${parseOptions.join('&')}`, options)
+		return this.newFetch(`/products?${parseOptions ? parseOptions.join('&') : ''}`, options)
 		.then(data => data.data)
 	}
 
@@ -483,6 +496,19 @@ class Api {
 			},
 			credentials: 'include',
 			body: JSON.stringify(product)
+		}
+
+		return this.newFetch(`/products/${pid}`, options)
+		.then(data => data)
+	}
+
+	public static deleteProduct = (pid: string) => {
+		const options: RequestInit = {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include'
 		}
 
 		return this.newFetch(`/products/${pid}`, options)
@@ -684,6 +710,33 @@ class Api {
 		}
 
 		return this.newFetch('/posts', options)
+		.then(data => data)
+	}
+
+	public static editPost = (pid: string, editPost: EditPost) => {
+		const options: RequestInit = {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(editPost),
+			credentials: 'include'
+		}
+
+		return this.newFetch(`/posts/${pid}`, options)
+		.then(data => data.data)
+	}
+
+	public static deletePost = (pid: string) => {
+		const options: RequestInit = {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include'
+		}
+
+		return this.newFetch(`/posts/${pid}`, options)
 		.then(data => data)
 	}
 

@@ -33,6 +33,8 @@ const SelectedCommerce = ({ id }: { id: string }) => {
 	const setSelectedCommerce = useAllStore(state => state.setSelectedCommerce)
 	const ref = useRef<HTMLDivElement>(null)
 	const [, navigate] = useLocation()
+	const userLocation = useAllStore(state => state.userLocation)
+	const setRouteTo = useAllStore(state => state.setRouteTo)
 	
 	const clickOutside = (e: MouseEvent) => {
 		if (ref.current && !ref.current.contains(e.target as Node)) {
@@ -57,6 +59,12 @@ const SelectedCommerce = ({ id }: { id: string }) => {
 			setCommerce(data.data)
 		})
 	}, [id])
+
+	const handleRoute = () => {
+		if (!userLocation || !commerce) return
+		
+		setRouteTo(commerce)
+	}
 	
 	return (
 		<motion.div className={styles.selectedCommerce} initial={{ y: '100%' }} animate={{ y: '4em' }} exit={{ y: '100%' }} ref={ref}>
@@ -109,7 +117,7 @@ const SelectedCommerce = ({ id }: { id: string }) => {
 								</div>
 								Ver más
 							</button>
-							<button>
+							<button onClick={handleRoute}>
 								<div className={styles.icon}>
 									<PiPathBold />
 								</div>

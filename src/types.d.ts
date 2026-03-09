@@ -169,6 +169,14 @@ type NewPost = {
 	visibility: 'public'|'private'|'unlisted'
 }
 
+type EditPost = {
+	title?: string,
+	content?: string,
+	attachments?: string[],
+	tags?: string[],
+	visibility?: 'public'|'private'|'unlisted'
+}
+
 interface Post extends NewPost {
 	id: number,
 	user: {

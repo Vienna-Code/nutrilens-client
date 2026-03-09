@@ -21,6 +21,11 @@ const commerceTypes = [
 	'restaurant'
 ] as const
 
+const allowedRanks = [
+	'gold',
+	'platinum'
+]
+
 const EditCommerce = () => {
 	const { id } = useParams()
 	const user = useAllStore(state => state.user)
@@ -128,7 +133,7 @@ const EditCommerce = () => {
 		if (successCounter === 0) navigate('/')
 	}, [successCounter])
 
-	if (user === 'guest' || !user || !user.roles.includes('ROLE_ADMIN') && user.userRank !== 'platinum') return <NotFound icon='prohibit' title='Rango insuficiente' message='Debes ser de rango platino para modificar un comercio' buttonIcon='commerce' buttonText='Volver al comercio' link='/' />
+	if (user === 'guest' || !user || !user.roles.includes('ROLE_ADMIN') && !allowedRanks.includes(user.userRank)) return <NotFound icon='prohibit' title='Rango insuficiente' message='Debes ser de rango oro o superior para modificar un comercio' buttonIcon='commerce' buttonText='Volver al comercio' link='/' />
 	
 	const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
 		if (error) resetError()
@@ -276,7 +281,7 @@ const EditCommerce = () => {
 							<Tippy content={error.message} visible={error.field === 'search'} placement='top-start' arrow inertia animation='scale'>
 								<fieldset>
 									<label htmlFor="search">Buscar lugar...</label>
-									<input id='search' className={styles.searchAddress} type="text" onChange={handleSearch} placeholder=' ' />
+									<input id='search' className={styles.searchAddress} type="text" onChange={handleSearch} placeholder=' ' disabled={!user.roles.includes('ROLE_ADMIN')} />
 									{(locationList !== undefined && pendingSelection) &&
 										<div className={styles.results}>
 											{locationList === null ?
@@ -302,13 +307,13 @@ const EditCommerce = () => {
 							<Tippy content={error.message} visible={error.field === 'name'} placement='top-start' arrow inertia animation='scale'>
 								<fieldset>
 									<label htmlFor="commerceName">Nombre del comercio *</label>
-										<input id='commerceName' name='commerceName' required type="text" placeholder=' ' ref={nameRef} key={name} defaultValue={name} onChange={resetError} />
+										<input id='commerceName' name='commerceName' required type="text" placeholder=' ' ref={nameRef} key={name} defaultValue={name} onChange={resetError} disabled={!user.roles.includes('ROLE_ADMIN')} />
 								</fieldset>
 							</Tippy>
 							<Tippy content={error.message} visible={error.field === 'address'} placement='top-start' arrow inertia animation='scale'>
 								<fieldset>
 									<label htmlFor="address">Dirección *</label>
-										<input id='address' name='address' type="text" key={selectedLocation ? selectedLocation[0].text : ''} placeholder=' ' defaultValue={selectedLocation ? selectedLocation[0].text : ''} required onChange={resetError} />
+										<input id='address' name='address' type="text" key={selectedLocation ? selectedLocation[0].text : ''} placeholder=' ' defaultValue={selectedLocation ? selectedLocation[0].text : ''} required onChange={resetError} disabled={!user.roles.includes('ROLE_ADMIN')} />
 								</fieldset>
 							</Tippy>
 							<fieldset>
@@ -318,7 +323,7 @@ const EditCommerce = () => {
 									</div>
 									<label htmlFor="type">Tipo de comercio *</label>
 									<Tippy content={error.message} visible={error.field === 'type'} placement='top-start' arrow={true} inertia={true} animation='scale'>
-										<select id='type' defaultValue={type} key={type} name="type" required onChange={handleType}>
+										<select id='type' defaultValue={type} key={type} name="type" required onChange={handleType} disabled={!user.roles.includes('ROLE_ADMIN')}>
 											<option value="" disabled>Seleccione una opción</option>
 											<option value="kiosk">Kiosco</option>
 											<option value="supermarket">Supermercado</option>
@@ -346,7 +351,7 @@ const EditCommerce = () => {
 								<label htmlFor="phone">Número de contacto</label>
 								<input id='phone' name='phone' type="text" placeholder=' ' value={phone} onChange={handlePhone} onKeyDown={e => { if (e.key === '+' || e.key === '-' || e.key === 'e') e.preventDefault() }} />
 							</fieldset>
-							<DropImage<File|string> images={images} setImages={setImages} type='comercio' square={false} label='Imágenes' />
+							<DropImage<File|string> images={images} setImages={setImages} type='comercio' square={false} label='Imágenes' disabled={!user.roles.includes('ROLE_ADMIN')} />
 							<fieldset className={styles.mixed}>
 								<span className={styles.title}>Horarios</span>
 								<Tippy content={error.message} visible={error.field === 'schedules'} placement='top-start' arrow={true} inertia={true} animation='scale'>

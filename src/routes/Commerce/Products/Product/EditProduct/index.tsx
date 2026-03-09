@@ -52,7 +52,7 @@ const EditProduct = () => {
 		if (successCounter === 0) navigate('/..')
 	}, [successCounter])
 
-	if (user === 'guest' || !user || !user.roles.includes('ROLE_ADMIN') && user.userRank !== 'platinum' || user.userRank !== 'gold') return <NotFound icon='prohibit' title='Rango insuficiente' message='Debes ser de rango oro o superior para modificar un producto' buttonIcon='product' buttonText='Volver al producto' link='/' />
+	if (user === 'guest' || !user || !user.roles.includes('ROLE_ADMIN') && user.userRank === 'bronze') return <NotFound icon='prohibit' title='Rango insuficiente' message='Debes ser de rango plata o superior para modificar un producto' buttonIcon='product' buttonText='Volver al producto' link='/' />
 
 	const trim = (string: string) => {
 		return string.trim()
@@ -141,13 +141,13 @@ const EditProduct = () => {
 							<Tippy content={error.message} visible={error.field == 'name'} placement='top-start'>
 								<fieldset>
 									<label htmlFor="productName">Nombre del producto *</label>
-									<input id='productName' name='productName' required type="text" placeholder=' ' onChange={resetError} defaultValue={product.name} />
+									<input id='productName' name='productName' required type="text" placeholder=' ' onChange={resetError} defaultValue={product.name} disabled={!user.roles.includes('ROLE_ADMIN')} />
 								</fieldset>
 							</Tippy>
 							<Tippy content={error.message} visible={error.field == 'brand'} placement='top-start'>
 								<fieldset>
 									<label htmlFor="brand">Marca *</label>
-									<input id='brand' name='brand' required type="text" placeholder=' ' onChange={resetError} defaultValue={product.brand} />
+									<input id='brand' name='brand' required type="text" placeholder=' ' onChange={resetError} defaultValue={product.brand} disabled={!user.roles.includes('ROLE_ADMIN')} />
 								</fieldset>
 							</Tippy>
 							<Tippy content={error.message} visible={error.field == 'type'} placement='top-start'>
@@ -157,7 +157,7 @@ const EditProduct = () => {
 											<PiCaretLeftBold />
 										</div>
 										<label htmlFor="type">Tipo de producto *</label>
-										<select id='type' name="type" defaultValue={product.category} required onChange={resetError}>
+										<select id='type' name="type" defaultValue={product.category} required onChange={resetError} disabled={!user.roles.includes('ROLE_ADMIN')}>
 											<option value="" disabled>Seleccione una opción</option>
 											<option value="food">Comida</option>
 											<option value="drink">Bebida</option>
@@ -176,7 +176,7 @@ const EditProduct = () => {
 							</Tippy>
 							<Tippy content={error.message} visible={error.field == 'images'}>
 								<fieldset>
-									<DropImage<File|string> images={images} setImages={setImages} type='producto' label='Imágenes *' />
+									<DropImage<File|string> images={images} setImages={setImages} type='producto' label='Imágenes *' disabled={!user.roles.includes('ROLE_ADMIN')} />
 								</fieldset>
 							</Tippy>
 							<Tippy content={error.message} visible={error.field == 'aptFor'} placement='top-start'>

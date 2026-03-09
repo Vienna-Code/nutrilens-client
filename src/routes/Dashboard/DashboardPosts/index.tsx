@@ -1,45 +1,21 @@
 import { Link, useLocation } from 'wouter'
 import styles from './styles.module.scss'
-import { PiCaretLeftBold, PiImagesSquareBold, PiPencilBold, PiTrashBold, PiWarningBold } from 'react-icons/pi'
+import { PiCaretLeftBold, PiChatCircleBold, PiImagesSquareBold, PiPencilBold, PiTrashBold, PiWarningBold } from 'react-icons/pi'
 import { useEffect, useState, type ChangeEvent } from 'react'
 import Api from '../../../utils/api'
 import LoadingPage from '../../../components/LoadingPage'
 import NotFound from '../../../components/NotFound'
 import { AnimatePresence, motion } from 'framer-motion'
-import LoadingChild from '../../../components/LoadingChild'
 
-const DashboardCommerces = () => {
-	const [commerces, setCommerces] = useState<Commerce[]>()
+const DashboardPosts = () => {
+	const [posts, setPosts] = useState<Post[]>()
 	const [search, setSearch] = useState('')
-	const [loadingSearch, setLoadingSearch] = useState(false)
-	const [deleteModal, setDeleteModal] = useState<{ id: string, name: string, address: string }>()
+	const [deleteModal, setDeleteModal] = useState<{ id: number, title: string, content: string }>()
 	const [, navigate] = useLocation()
 
 	useEffect(() => {
-		if (!commerces) Api.getCommerces().then(data => setCommerces(data.data))
+		if (!posts) Api.getPosts(null).then(setPosts)
 	}, [])
-
-	const searchWithOptions = (value: string) => {
-		Api.getCommerces({
-			name: value || undefined,
-		}).then(data => {
-			setCommerces(data.data)
-			setLoadingSearch(false)
-		})
-	}
-
-	useEffect(() => {
-		setLoadingSearch(true)
-		
-		const timer = setTimeout(() => {
-			searchWithOptions(search)
-		}, 1500)
-
-		return () => {
-			clearTimeout(timer)
-			setLoadingSearch(false)
-		}
-	}, [search])
 
 	const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
 		const { value } = e.currentTarget
@@ -51,19 +27,18 @@ const DashboardCommerces = () => {
 		
 		const { id } = deleteModal
 
-		Api.deleteCommerce(id)
+		Api.deletePost(`${id}`)
 		.then(() => {
-			Api.getCommerces({
-				name: search || undefined
-			}).then(data => {
-				setCommerces(data.data)
+			Api.getPosts(null)
+			.then(data => {
+				setPosts(data)
 				setDeleteModal(undefined)
 			})
 		})
 	}
 	
 	return (
-		<div className={styles.dashboardCommerces}>
+		<div className={styles.dashboardPosts}>
 			<AnimatePresence>
 				{deleteModal &&
 					<motion.div className={styles.deleteModalWrapper} initial={{ backgroundColor: 'var(--pr-color-tp)' }} animate={{ backgroundColor: 'var(--pr-color-op)' }} exit={{ opacity: 0 }} onClick={() => setDeleteModal(undefined)}>
@@ -72,14 +47,14 @@ const DashboardCommerces = () => {
 								<div className={styles.icon}>
 									<PiWarningBold />
 								</div>
-								<p>¿Realmente desea eliminar este comercio?</p>
+								<p>¿Realmente desea eliminar este post?</p>
 							</div>
-							<motion.div layoutId={deleteModal.id} className={styles.commerce}>
+							<motion.div layoutId={`${deleteModal.id}`} className={styles.product}>
 								<div className={styles.title}>
-									{deleteModal.name}
+									{deleteModal.title}
 								</div>
 								<div className={styles.content}>
-									{deleteModal.address}
+									{deleteModal.content.length > 80 ? `${deleteModal.content.substring(80)}...` : deleteModal.content}
 								</div>
 							</motion.div>
 							<div className={styles.actions}>
@@ -90,7 +65,7 @@ const DashboardCommerces = () => {
 					</motion.div>
 				}
 			</AnimatePresence>
-			{!commerces ? <LoadingPage />
+			{!posts ? <LoadingPage />
 			:
 				<>
 					<Link to='~/dashboard'>
@@ -100,40 +75,43 @@ const DashboardCommerces = () => {
 						Atrás
 					</Link>
 					<div className={styles.search}>
-						<input type="text" placeholder='Buscar comercios...' onChange={handleSearch} />
-						{loadingSearch &&
-							<div className={styles.loading}>
-								<LoadingChild />
-							</div>
-						}
+						<input type="text" placeholder='Buscar posts...' onChange={handleSearch} />
 					</div>
-					{commerces.length > 0 ?
-						<div className={styles.commerces}>
+					{posts.length > 0 ?
+						<div className={styles.posts}>
 							<AnimatePresence>
-								{commerces.map(({ id, name, address, commerceImages }) => (
-									<motion.div className={styles.commerce} key={id} initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} layoutId={id}>
-										<Link to={`~/commerce/${id}`} className={styles.title}>
-											{name}
+								{posts.filter(x => search ? x.title.toLowerCase().includes(search.toLowerCase()) : x).map(({ id, title, content, attachments, totalComments }) => (
+									<motion.div className={styles.post} key={id} initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} layoutId={`${id}`}>
+										<Link to={`~/community/${id}`} className={styles.title}>
+											{title}
 										</Link>
 										<div className={styles.content}>
-											{address}
+											{content.length > 80 ? `${content.substring(80)}...` : content}
 										</div>
-										{commerceImages &&
+										{attachments &&
 											<div className={styles.attachments}>
 												<div className={styles.icon}>
 													<PiImagesSquareBold />
 												</div>
-												{commerceImages.length} {commerceImages.length > 1 ? 'imágenes adjuntas' : 'imagen adjunta'}
+												{attachments.length} {attachments.length > 1 ? 'imágenes adjuntas' : 'imagen adjunta'}
+											</div>
+										}
+										{totalComments > 0 &&
+											<div className={styles.comments}>
+												<div className={styles.icon}>
+													<PiChatCircleBold />
+												</div>
+												{totalComments} {totalComments > 1 ? 'comentarios' : 'comentario'}
 											</div>
 										}
 										<div className={styles.actions}>
-											<button onClick={() => navigate(`~/commerce/${id}/edit`)}>
+											<button onClick={() => navigate(`~/community/${id}/edit`)}>
 												<div className={styles.icon}>
 													<PiPencilBold />
 												</div>
 												Editar
 											</button>
-											<button onClick={() => setDeleteModal(() => ({ id, name, address }))}>
+											<button onClick={() => setDeleteModal(() => ({ id, title, content }))}>
 												<div className={styles.icon}>
 													<PiTrashBold />
 												</div>
@@ -144,11 +122,11 @@ const DashboardCommerces = () => {
 								))}
 							</AnimatePresence>
 						</div>
-					: <NotFound icon='map' title='No se encontraron comercios' message='' />}
+					: <NotFound icon='post' title='No se encontraron posts' message='' />}
 				</>
 		}
 		</div>
 	)
 }
 
-export default DashboardCommerces
+export default DashboardPosts

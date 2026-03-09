@@ -1,4 +1,4 @@
-import { PiGearBold, PiGpsBold, PiGpsFixBold, PiListBold, PiPlusBold, PiSignOutBold, PiUserBold, PiUsersThreeBold, PiXBold } from 'react-icons/pi'
+import { PiGearBold, PiGpsBold, PiGpsFixBold, PiListBold, PiPersonSimpleWalkBold, PiPlusBold, PiSignOutBold, PiUserBold, PiUsersThreeBold, PiXBold } from 'react-icons/pi'
 import Map from '../../components/Map'
 import styles from './styles.module.scss'
 import Icon from '../../components/Icon'
@@ -25,6 +25,10 @@ const Home = () => {
 	const unverifiedProducts = useAllStore(state => state.unverifiedProducts)
 	const setUnverifiedCommerces = useAllStore(state => state.setUnverifiedCommerces)
 	const setUnverifiedProducts = useAllStore(state => state.setUnverifiedProducts)
+	const routeTo = useAllStore(state => state.routeTo)
+	const setRouteTo = useAllStore(state => state.setRouteTo)
+	const setRenderRoute = useAllStore(state => state.setRenderRoute)
+	const summary = useAllStore(state => state.summary)
 	const menuRef = useRef<HTMLDivElement>(null)
 	
 	const handleSearch = () => {
@@ -32,11 +36,17 @@ const Home = () => {
 	}
 
 	useEffect(() => {
+		setRenderRoute(true)
+		
 		if (commerces.length === 0) {
 			Api.getCommerces()
 			.then(data => {
 				setCommerces(data.data)
 			})
+		}
+
+		return () => {
+			setRenderRoute(false)
 		}
 	}, [])
 
@@ -49,6 +59,23 @@ const Home = () => {
 	
 	return (
 		<div className={styles.home}>
+			<AnimatePresence>
+				{routeTo &&
+					<motion.div className={styles.routeTo} initial={{ y: '-100%' }} animate={{ y: '1em' }} exit={{ y: '-100%' }}>
+						<div className={styles.info}>
+							<div className={styles.icon}>
+								<PiPersonSimpleWalkBold />
+							</div>
+							{summary &&
+								<span>
+									{summary.totalDistance > 1000 ? `${(summary.totalDistance / 1000).toFixed(2)}km` : `${summary.totalDistance.toFixed(0)}m`}
+								</span>
+							}
+						</div>
+						<button onClick={() => setRouteTo(undefined)}>Cancelar</button>
+					</motion.div>
+				}
+			</AnimatePresence>
 			<AnimatePresence>
 				{selectedCommerce &&
 					<SelectedCommerce id={selectedCommerce} />

@@ -13,6 +13,7 @@ import ImageVisualizer from '../../../components/ImageVisualizer'
 const GeneralInfo = ({ commerce, setLocalVerify }: { commerce: Commerce, setLocalVerify: Dispatch<SetStateAction<boolean | undefined>> }) => {
 	const userLocation = useAllStore(state => state.userLocation)
 	const user = useAllStore(state => state.user)
+	const setRouteTo = useAllStore(state => state.setRouteTo)
 	const [, navigate] = useLocation()
 	const [summary, setSummary] = useState(false)
 	const [verifyModal, setVerifyModal] = useState(false)
@@ -22,7 +23,8 @@ const GeneralInfo = ({ commerce, setLocalVerify }: { commerce: Commerce, setLoca
 	const handleRoute = () => {
 		if (!userLocation || !commerce) return
 
-		Api.traceRoute([userLocation.lng, userLocation.lat], [commerce.coordsLon, commerce.coordsLat], 'foot')
+		setRouteTo(commerce)
+		navigate('~/')
 	}
 
 	const handleVerify = (verify: boolean) => () => {
