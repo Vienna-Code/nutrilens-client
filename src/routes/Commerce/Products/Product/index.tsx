@@ -120,7 +120,7 @@ const Product = () => {
 					</div>
 					<div className={styles.pic} onClick={() => product.productImages && setViewImages(currentImage)}>
 						{product.productImages ?
-							<img src={`${import.meta.env.VITE_API_URL as string}/images/${product.productImages[currentImage]}`} alt="" />
+							<img src={`/api/images/${product.productImages[currentImage]}`} alt="" />
 						:
 							<div className={styles.blankImg}>
 								<div className={styles.icon}>
@@ -133,7 +133,7 @@ const Product = () => {
 						<div className={styles.images}>
 							{product.productImages.map((uuid, i) => (
 								<div className={styles.image} key={uuid} onClick={() => setCurrentImage(i)}>
-									<img src={`${import.meta.env.VITE_API_URL as string}/images/${uuid}`} alt="" />
+									<img src={`/api/images/${uuid}`} alt="" />
 								</div>
 							))}
 						</div>

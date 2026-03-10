@@ -50,7 +50,7 @@ const Products = () => {
 							<div className={styles.product} key={id} onClick={() => navigate(`/${id}`)}>
 								<div className={styles.image}>
 									{productImages ? 
-										<img src={`${import.meta.env.VITE_API_URL as string}/images/${productImages[0]}`} alt="" />
+										<img src={`/api/images/${productImages[0]}`} alt="" />
 									:
 										<div className={styles.blankImg}>
 											<div className={styles.icon}>
