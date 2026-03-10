@@ -41,7 +41,7 @@ const ReportProduct = () => {
 
 		setLoading(true)
 
-		Api.reportCommerce(pid, newReport)
+		Api.reportProduct(pid, newReport)
 		.then(() => {
 			setSuccess(true)
 

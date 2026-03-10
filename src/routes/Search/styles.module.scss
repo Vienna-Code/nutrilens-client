@@ -205,6 +205,16 @@
 						font-size: 0.9em;
 						opacity: 0.7;
 					}
+
+					.tags {
+						display: flex;
+						gap: 0.5em;
+
+						.tag {
+							display: flex;
+							align-items: center;
+						}
+					}
 				}
 			}
 		}

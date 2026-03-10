@@ -67,12 +67,8 @@ const EditProduct = () => {
 
 		if (!aptFor.some(x => x.checked)) return setError(() => ({ field: 'aptFor', message: 'Debe seleccionar al menos una restricción alimenticia' }))
 
-		if (!trim(productName.value)) return setError(() => ({ field: 'name', message: 'Debe especificar el nombre del producto' }))
-		if (!trim(brand.value)) return setError(() => ({ field: 'brand', message: 'Debe especificar la marca del producto' }))
-		if (!trim(price.value)) return setError(() => ({ field: 'price', message: 'Debe especificar el precio del producto' }))
 		if (isNaN(+!trim(price.value))) return setError(() => ({ field: 'price', message: 'El precio del producto debe ser un número' }))
 		if (+trim(price.value) <= 0) return setError(() => ({ field: 'price', message: 'El precio del producto debe ser mayor a 0' }))
-		if (images.length < 1) return setError(() => ({ field: 'images', message: 'Debe adjuntar al menos una imagen del producto' }))
 			
 		if (!id || !pid) return
 
@@ -80,16 +76,22 @@ const EditProduct = () => {
 
 		setLoading(false)
 		
-		const uuids = await Api.uploadImages(parseImages).then(uuids => uuids as string[])
+		const uuids = parseImages.length > 0 ? await Api.uploadImages(parseImages).then(uuids => uuids as string[]) : undefined
 
 		const newProduct = {
-			commerceId: +id,
-			name: trim(productName.value),
-			brand: trim(brand.value),
-			category: trim(type.value) as 'food'|'drink',
-			price: +trim(price.value),
+			name: trim(productName.value) || undefined,
+			brand: trim(brand.value) || undefined,
+			category: trim(type.value) as 'food'|'drink'|undefined || undefined,
+			price: +trim(price.value) || undefined,
 			images: uuids,
 			aptFor: aptFor.filter(x => x.checked).map(x => x.value)
+		}
+
+		if (!user.roles.includes('ROLE_ADMIN')) {
+			delete newProduct.name
+			delete newProduct.brand
+			delete newProduct.category
+			delete newProduct.images
 		}
 		
 		Api.editProduct(pid, newProduct)
@@ -191,7 +193,7 @@ const EditProduct = () => {
 							</Tippy>
 							<fieldset>
 								<button type='submit'>
-									Añadir
+									Editar
 								</button>
 							</fieldset>
 						</div>

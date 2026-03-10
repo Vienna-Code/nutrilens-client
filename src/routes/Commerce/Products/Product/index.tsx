@@ -75,7 +75,7 @@ const Product = () => {
 			{product && commerce ?
 				<>
 					<AnimatePresence>
-						{viewImages !== undefined && product.productImages &&
+						{viewImages !== undefined && product.productImages && product.productImages.length > 0 &&
 							<ImageVisualizer {...{viewImages, setViewImages}} images={product.productImages} />
 						}
 					</AnimatePresence>
@@ -119,7 +119,7 @@ const Product = () => {
 						<Link to={`~/commerce/${id}`} className={styles.name}>{commerce.name}</Link> &gt; <Link to={`~/commerce/${id}/products`}>Productos</Link> &gt; <span className={styles.name}>{product.name}</span>
 					</div>
 					<div className={styles.pic} onClick={() => product.productImages && setViewImages(currentImage)}>
-						{product.productImages ?
+						{product.productImages && product.productImages.length > 0 ?
 							<img src={`/api/images/${product.productImages[currentImage]}`} alt="" />
 						:
 							<div className={styles.blankImg}>

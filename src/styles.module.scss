@@ -1,0 +1,9 @@
+.main {
+	max-width: 40em;
+	width: 100%;
+	outline: 3px solid var(--ac-color);
+
+	&.map {
+		max-width: 100%;
+	}
+}

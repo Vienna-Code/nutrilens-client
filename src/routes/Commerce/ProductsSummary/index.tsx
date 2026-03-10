@@ -35,7 +35,7 @@ const ProductsSummary = ({ products }: { products: Product[] }) => {
 					return (
 						<div className={styles.product} key={id} onClick={() => navigate(`/products/${id}`)}>
 							<div className={styles.image}>
-								{productImages ? 
+								{productImages && productImages.length > 0 ? 
 									<img src={`/api/images/${productImages[0]}`} alt="" />
 								:
 									<div className={styles.blankImg}>

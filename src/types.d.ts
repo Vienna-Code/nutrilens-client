@@ -12,7 +12,27 @@ type RealUser = {
 	createdAt: string
 }
 
+type NewUser = {
+	username: string,
+	email: string,
+	password: string,
+	roles: ('ROLE_USER'|'ROLE_ADMIN')[]
+}
+
 type User = undefined | null | 'guest' | RealUser
+
+type EditUserAdmin = {
+	username?: string,
+	email?: string,
+	newPassword?: string,
+	roles?: ('ROLE_USER'|'ROLE_ADMIN')[]
+}
+
+type EditUser = {
+	newPassword?: string,
+	currentPassword?: string,
+	alimentaryRestrictions: ('celiac'|'hypertensive'|'diabetic')[]
+}
 
 type Product = {
 	id: number
@@ -47,7 +67,13 @@ type AddProduct = {
 	aptFor: ('celiac'|'hypertensive'|'diabetic')[]
 }
 
-type EditProduct = Omit<AddProduct, 'commerceId'> & {
+type EditProduct = {
+	name?: string,
+	brand?: string,
+	category?: 'food'|'drink',
+	price?: number,
+	images?: string[],
+	aptFor?: ('celiac'|'hypertensive'|'diabetic')[]
 	verified?: boolean
 }
 
@@ -107,7 +133,7 @@ type EditCommerce = {
 		email?: string
 	},
 	paymentMethods?: string[],
-	images?: string[],
+	images?: string[]|null,
 	commerceSchedules?: {
 		weekday: number,
 		opensAt: string,
@@ -131,7 +157,7 @@ type CommerceReport = GetReport & {
 }
 
 type ProductReport = GetReport & {
-	product: Pick<Product, 'id'|'name'|'type'>
+	product: Pick<Product, 'id'|'name'|'type'|'commerce'>
 }
 
 type AddReport = {
@@ -172,7 +198,7 @@ type NewPost = {
 type EditPost = {
 	title?: string,
 	content?: string,
-	attachments?: string[],
+	attachments?: string[]|null,
 	tags?: string[],
 	visibility?: 'public'|'private'|'unlisted'
 }

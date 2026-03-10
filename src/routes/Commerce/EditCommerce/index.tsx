@@ -86,8 +86,8 @@ const EditCommerce = () => {
 
 				if (!findDay) return { weekday, opensAt, closesAt }
 
-				const parseOpensAt = findDay.opensAt.split('T')[1].split('+')[0]
-				const parseClosesAt = findDay.closesAt.split('T')[1].split('+')[0]
+				const parseOpensAt = findDay.opensAt.split('T')[1].split('+')[0].substring(0, 5)
+				const parseClosesAt = findDay.closesAt.split('T')[1].split('+')[0].substring(0, 5)
 
 				return {
 					weekday,
@@ -185,14 +185,14 @@ const EditCommerce = () => {
 		if (isNaN(+scheduleDay)) return e.preventDefault()
 		const { value } = e.currentTarget
 
-		setSchedules(prev => prev.map((x, i) => i === +scheduleDay ? ({ ...x, opensAt: value }) : x))
+		setSchedules(prev => prev.map((x, i) => i === +scheduleDay ? ({ ...x, opensAt: value.substring(0, 5) }) : x))
 	}
 
 	const handleClosesAt = (e: ChangeEvent<HTMLInputElement>) => {
 		if (isNaN(+scheduleDay)) return e.preventDefault()
 		const { value } = e.currentTarget
 
-		setSchedules(prev => prev.map((x, i) => i === +scheduleDay ? ({ ...x, closesAt: value }) : x))
+		setSchedules(prev => prev.map((x, i) => i === +scheduleDay ? ({ ...x, closesAt: value.substring(0, 5) }) : x))
 	}
 	
 	const resetError = () => {
@@ -206,12 +206,6 @@ const EditCommerce = () => {
 		const paymentMethods = [paymentMethods1, paymentMethods2, paymentMethods3]
 		
 		if (!id) return
-		
-		if (!paymentMethods.some(x => x.checked)) return setError(() => ({ field: 'paymentMethods', message: 'Debe seleccionar al menos un método de pago' }))
-		if (commerceName.value.trim() === '') return setError(() => ({ field: 'name', message: 'Debe especificar el nombre del comercio' }))
-		if (address.value.trim() === '') return setError(() => ({ field: 'address', message: 'Debe especificar una dirección' }))
-		if (type.value.trim() === '') return setError(() => ({ field: 'type', message: 'Debe especificar un tipo de comercio' }))
-		if (schedule.value !== '' && !schedules.every(x => x.closesAt !== '' && x.opensAt !== '')) return setError(() => ({ field: 'schedules', message: 'Debe completar los horarios para todos los días' }))
 
 		const contactInfo = Object.fromEntries(Object.entries({ email: email.value, number: phone.value }).filter(([, value]) => value.trim() !== '').map(([key, value]) => key === 'number' ? [key, `+598${value.replace(/\D+/g, '')}`] : [key, value]))
 
@@ -221,18 +215,28 @@ const EditCommerce = () => {
 
 		setLoading(true)
 
-		const uuids = parseImages ? await Api.uploadImages(parseImages).then(uuids => uuids as string[]) : undefined
+		const uuids = parseImages ? await Api.uploadImages(parseImages).then(uuids => uuids as string[]) : null
 
-		const data: AddCommerce = {
-			name: commerceName.value.trim(),
+		const data: EditCommerce = {
+			name: commerceName.value.trim() || undefined,
 			type: type.value,
 			coordsLat: selectedLocation[0].coords[0],
 			coordsLon: selectedLocation[0].coords[1],
-			address: address.value.trim(),
+			address: address.value.trim() || undefined,
 			contactInfo: Object.keys(contactInfo).length > 0 ? contactInfo : undefined,
 			paymentMethods: paymentMethods.filter(x => x.checked).map(x => x.value),
 			images: uuids,
 			commerceSchedules: schedule.value !== '' ? schedules : undefined
+		}
+
+		if (!user.roles.includes('ROLE_ADMIN')) {
+			delete data.name
+			delete data.type
+			delete data.coordsLat
+			delete data.coordsLat
+			delete data.coordsLon
+			delete data.address
+			delete data.images
 		}
 
 		Api.editCommerce(id, data)
@@ -385,7 +389,7 @@ const EditCommerce = () => {
 							</fieldset>
 							<fieldset>
 								<button type='submit'>
-									Añadir
+									Editar
 								</button>
 							</fieldset>
 						</div>

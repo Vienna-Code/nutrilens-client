@@ -61,7 +61,7 @@ const Home = () => {
 	const sxCheck = { color: 'var(--ac-color)', '&.Mui-checked': { color: 'var(--ac-color)' }, alignSelf: 'flex-start' }
 	
 	return (
-		<div className={styles.home}>
+		<div className={styles.home} id='home'>
 			<AnimatePresence>
 				{routeTo &&
 					<motion.div className={styles.routeTo} initial={{ y: '-100%' }} animate={{ y: '1em' }} exit={{ y: '-100%' }}>

@@ -1,10 +1,23 @@
-.addUser {
+.editProfile {
 	width: 100%;
 	min-height: 100dvh;
 	padding: 1.5em;
 	display: flex;
 	flex-direction: column;
 	gap: 1em;
+
+	a {
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+		color: var(--tx-color);
+
+		.icon {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
 
 	.success {
 		position: absolute;
@@ -49,24 +62,23 @@
 			}
 		}
 	}
-
-	a {
-		display: flex;
-		align-items: center;
-		gap: 0.5em;
-		color: var(--tx-color);
-
-		.icon {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-		}
-	}
 	
 	h3 {
 		font-size: 1.5em;
 		text-align: left;
 		margin-top: 1em;
+		display: flex;
+		flex-direction: column;
+		gap: 0.2em;
+		
+		.username {
+			font-size: 0.7em;
+			font-weight: 500;
+		}
+	}
+
+	.username {
+		color: var(--tx-color-op-2);
 	}
 
 	form {
@@ -154,6 +166,23 @@
 							background-color: var(--ac-color);
 						}
 					}
+				}
+			}
+
+			span.title {
+				font-size: 1.2em;
+			}
+
+			.checks {
+				width: 100%;
+				display: flex;
+				flex-wrap: wrap;
+
+				label {
+					position: initial;
+					translate: initial;
+					background-color: transparent;
+					flex: 1;
 				}
 			}
 

@@ -49,7 +49,7 @@ const Products = () => {
 					{products.map(({ id, productImages, name, price, aptFor }) => (
 							<div className={styles.product} key={id} onClick={() => navigate(`/${id}`)}>
 								<div className={styles.image}>
-									{productImages ? 
+									{productImages && productImages.length > 0 ?
 										<img src={`/api/images/${productImages[0]}`} alt="" />
 									:
 										<div className={styles.blankImg}>

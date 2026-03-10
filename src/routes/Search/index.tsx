@@ -1,4 +1,4 @@
-import { PiCaretLeft, PiCaretLeftBold, PiFunnelBold, PiXBold } from 'react-icons/pi'
+import { PiCaretLeft, PiCaretLeftBold, PiDropSlashBold, PiFunnelBold, PiGrainsSlashBold, PiXBold } from 'react-icons/pi'
 import styles from './styles.module.scss'
 import { Link, useLocation } from 'wouter'
 import { useEffect, useState, type ChangeEvent } from 'react'
@@ -7,6 +7,23 @@ import { Checkbox, FormControlLabel, Slider, Typography } from '@mui/material'
 import './styles.scss'
 import Api from '../../utils/api'
 import { useAllStore } from '../../store/useAllStore'
+import { TbCubeOff } from 'react-icons/tb'
+import Tippy from '@tippyjs/react'
+
+const parseTag = {
+	'celiac': {
+		icon: <PiGrainsSlashBold />,
+		text: 'Celíaco'
+	},
+	'hypertensive': {
+		icon: <PiDropSlashBold />,
+		text: 'Hipertenso'
+	},
+	'diabetic': {
+		icon: <TbCubeOff />,
+		text: 'Diabético'
+	}
+}
 
 const Search = () => {
 	const [, navigate] = useLocation()
@@ -171,11 +188,10 @@ const Search = () => {
 									Productos
 									<div className={styles.products}>
 										<AnimatePresence>
-											{searchProd && searchProd.map(({ id, commerce: { id: cid, name: cname }, name, brand }) => {
+											{searchProd && searchProd.map(({ id, commerce: { id: cid, name: cname }, name, brand, aptFor }) => {
 												const handleClick = () => {
 													navigate(`~/commerce/${cid}/products/${id}`)
 												}
-												// const parseDistance = distance >= 1000 ? `${distance / 1000}km` : `${distance}m`
 												
 												return (
 													<motion.button className={styles.product} key={id} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ opacity: 0 }} onClick={handleClick}>
@@ -184,6 +200,15 @@ const Search = () => {
 														</div>
 														<div className={styles.commerceName}>
 															{cname}
+														</div>
+														<div className={styles.tags} onClick={e => e.stopPropagation()}>
+															{aptFor.map(tag => (
+																<Tippy content={parseTag[tag].text} placement='top-start' arrow={true} inertia={true} animation='scale' key={tag}>
+																	<div className={styles.tag}>
+																		{parseTag[tag].icon}
+																	</div>
+																</Tippy>
+															))}
 														</div>
 													</motion.button>
 												)

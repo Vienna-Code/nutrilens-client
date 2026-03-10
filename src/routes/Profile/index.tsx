@@ -4,7 +4,7 @@ import { Link } from 'wouter'
 import { PiArrowClockwiseBold, PiCaretLeftBold, PiCheckBold, PiDropSlashBold, PiGrainsSlashBold, PiPencilBold, PiUploadSimpleBold } from 'react-icons/pi'
 import Tippy from '@tippyjs/react'
 import { parseRank } from '../../utils/ranks'
-import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type ChangeEvent } from 'react'
 import Api from '../../utils/api'
 import NotFound from '../../components/NotFound'
 import LoadingPage from '../../components/LoadingPage'
@@ -37,7 +37,6 @@ const Profile = () => {
 	const [clickCounter, setClickCounter] = useState(0)
 	const [image, setImage] = useState<File>()
 	const [loadingImage, setLoadingImage] = useState(false)
-	const [edit, setEdit] = useState(false)
 	const inputRef = useRef<HTMLInputElement>(null)
 	const audioRef = useRef<HTMLAudioElement>(null)
 	const audioRef2 = useRef<HTMLAudioElement>(null)
@@ -104,24 +103,6 @@ const Profile = () => {
 		})
 	}
 
-	const handleRestrictions = (e: FormEvent<HTMLFormElement>) => {
-		e.preventDefault()
-		const { celiac, diabetic, hypertensive } = e.currentTarget
-		const restrictions = [
-			{ name: 'celiac', value: celiac.checked },
-			{ name: 'diabetic', value: diabetic.checked },
-			{ name: 'hypertensive', value: hypertensive.checked }
-		]
-
-		const parseRestrictions = restrictions.filter(x => x.value).map(x => x.name) as ('celiac'|'diabetic'|'hypertensive')[]
-
-		Api.editUserRestrictions(parseRestrictions)
-		.then(data => {
-			setUser(data.data)
-			setEdit(false)
-		})
-	}
-	
 	return (
 		<div className={styles.profile}>
 			<audio src="/platinum.mp3" loop ref={audioRef}></audio>
@@ -172,45 +153,20 @@ const Profile = () => {
 								{user.email}
 							</div>
 							<div className={styles.restrictions}>
-								{!edit ?
-									<>
-										{user.alimentaryRestrictions.map(restriction => (
-											<Tippy content={parseRestrictions[restriction].text}>
-												<div className={styles.restriction}>
-													{parseRestrictions[restriction].icon}
-												</div>
-											</Tippy>
+								{user.alimentaryRestrictions.map(restriction => (
+									<Tippy content={parseRestrictions[restriction].text}>
+										<div className={styles.restriction}>
+											{parseRestrictions[restriction].icon}
+										</div>
+									</Tippy>
 
-										))}
-										<button className={styles.editRestrictions} onClick={() => setEdit(true)}>
-											<div className={styles.icon}>
-												<PiPencilBold />
-											</div>
-											Editar
-										</button>
-									</>
-								:
-									<form onSubmit={handleRestrictions}>
-										<fieldset>
-											<label htmlFor="celiac"><PiGrainsSlashBold /></label>
-											<input type="checkbox" id='celiac' name='celiac' value='celiac' defaultChecked={user.alimentaryRestrictions.includes('celiac')} />
-										</fieldset>
-										<fieldset>
-											<label htmlFor="diabetic"><TbCubeOff /></label>
-											<input type="checkbox" id='diabetic' name='diabetic' value='diabetic' defaultChecked={user.alimentaryRestrictions.includes('diabetic')} />
-										</fieldset>
-										<fieldset>
-											<label htmlFor="hypertensive"><PiDropSlashBold /></label>
-											<input type="checkbox" id='hypertensive' name='hypertensive' value='hypertensive' defaultChecked={user.alimentaryRestrictions.includes('hypertensive')} />
-										</fieldset>
-										<button type='submit'>
-											<div className={styles.icon}>
-												<PiCheckBold />
-											</div>
-											Guardar
-										</button>
-									</form>
-								}
+								))}
+								<Link to='/edit' className={styles.editRestrictions}>
+									<div className={styles.icon}>
+										<PiPencilBold />
+									</div>
+									Editar
+								</Link>
 							</div>
 							<div className={styles.since}>
 								Desde el {Intl.DateTimeFormat('es-UY', { dateStyle: 'long', timeStyle: 'short', hour12: false }).format(new Date(user.createdAt))}

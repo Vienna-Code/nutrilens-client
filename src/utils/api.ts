@@ -74,6 +74,19 @@ class Api {
 		return this.newFetch('/auth/logout', options)
 	}
 
+	public static getAdminUser = (id: string) => {
+		const options: RequestInit = {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include'
+		}
+
+		return this.newFetch(`/users/${id}`, options)
+		.then(data => data.data)
+	}
+
 	public static getUserCommerces = () => {
 		const options: RequestInit = {
 			method: 'GET',
@@ -240,6 +253,65 @@ class Api {
 		.then(data => data)
 	}
 
+	public static addUser = (newUser: NewUser) => {
+		const options: RequestInit = {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include',
+			body: JSON.stringify(newUser)
+		}
+
+		return this.newFetch('/users', options)
+		.then(data => data)
+	}
+
+	public static editUser = (editUser: EditUser) => {
+		const parseUser = Object.fromEntries(Object.entries(editUser).filter(([, value]) => value !== undefined))
+
+		const options: RequestInit = {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include',
+			body: JSON.stringify(parseUser)
+		}
+
+		return this.newFetch(`/users/me`, options)
+		.then(data => data)
+	}
+
+	public static editAdminUser = (uid: string, editUser: EditUserAdmin) => {
+		const parseUser = Object.fromEntries(Object.entries(editUser).filter(([, value]) => value !== undefined))
+		
+		const options: RequestInit = {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include',
+			body: JSON.stringify(parseUser)
+		}
+
+		return this.newFetch(`/users/${uid}`, options)
+		.then(data => data)
+	}
+	
+	public static deleteUser = (uid: string) => {
+		const options: RequestInit = {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include'
+		}
+
+		return this.newFetch(`/users/${uid}`, options)
+		.then(data => data)
+	}
+
 	public static getCommerces = (params?: {
 		lat?: [number, number],
 		lon?: [number, number],
@@ -331,17 +403,20 @@ class Api {
 	}
 
 	public static editCommerce = (cid: string, commerce: EditCommerce) => {
+		const parseCommerce = Object.fromEntries(Object.entries(commerce).filter(([, value]) => value !== undefined))
+		
 		const options: RequestInit = {
 			method: 'PATCH',
 			headers: {
 				'Content-Type': 'application/json'
 			},
 			credentials: 'include',
-			body: JSON.stringify(commerce)
+			body: JSON.stringify(parseCommerce)
 		}
 
 		return this.newFetch(`/commerces/${cid}`, options)
 		.then(data => data)
+		.catch(err => console.error(err.message, err.error))
 	}
 
 	public static deleteCommerce = (cid: string) => {
@@ -398,7 +473,7 @@ class Api {
 			credentials: 'include'
 		}
 
-		return this.newFetch(`/reports?resource=commerces&types=${types.join(',')}`, options)
+		return this.newFetch(`/reports?resource=commerces&resolved=null&types=${types.join(',')}`, options)
 		.then(data => data.data)
 	}
 
@@ -416,6 +491,22 @@ class Api {
 		}
 
 		return this.newFetch(`/commerces/${cid}/reports`, options)
+		.then(data => data)
+	}
+
+	public static editCommerceReport = (rid: number, cid: string, action: boolean) => {
+		const options: RequestInit = {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				resolved: action
+			}),
+			credentials: 'include'
+		}
+
+		return this.newFetch(`/commerces/${cid}/reports/${rid}`, options)
 		.then(data => data)
 	}
 
@@ -493,13 +584,15 @@ class Api {
 	}
 
 	public static editProduct = (pid: string, product: EditProduct) => {
+		const parseProduct = Object.fromEntries(Object.entries(product).filter(([, value]) => value !== undefined))
+		
 		const options: RequestInit = {
 			method: 'PATCH',
 			headers: {
 				'Content-Type': 'application/json'
 			},
 			credentials: 'include',
-			body: JSON.stringify(product)
+			body: JSON.stringify(parseProduct)
 		}
 
 		return this.newFetch(`/products/${pid}`, options)
@@ -560,7 +653,7 @@ class Api {
 			credentials: 'include'
 		}
 
-		return this.newFetch(`/reports?resource=products&types=${types.join(',')}`, options)
+		return this.newFetch(`/reports?resource=products&resolved=null&types=${types.join(',')}`, options)
 		.then(data => data.data)
 	}
 
@@ -578,6 +671,22 @@ class Api {
 		}
 
 		return this.newFetch(`/products/${pid}/reports`, options)
+		.then(data => data)
+	}
+
+	public static editProductReport = (rid: number, pid: number, action: boolean) => {
+		const options: RequestInit = {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				resolved: action
+			}),
+			credentials: 'include'
+		}
+
+		return this.newFetch(`/products/${pid}/reports/${rid}`, options)
 		.then(data => data)
 	}
 
@@ -718,12 +827,14 @@ class Api {
 	}
 
 	public static editPost = (pid: string, editPost: EditPost) => {
+		const parsePost = Object.fromEntries(Object.entries(editPost).filter(([, value]) => value !== undefined))
+		
 		const options: RequestInit = {
 			method: 'PATCH',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify(editPost),
+			body: JSON.stringify(parsePost),
 			credentials: 'include'
 		}
 
@@ -821,7 +932,7 @@ class Api {
 		return Promise.all(
 			images.map(image => {
 				return new Promise((res, rej) => {
-					if (typeof image === 'string') return image
+					if (typeof image === 'string') return res(image)
 					
 					return this.uploadImage(image)
 					.then(data => {

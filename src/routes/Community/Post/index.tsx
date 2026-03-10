@@ -284,7 +284,7 @@ const Post = () => {
 								</div>
 								{comments ? comments.length : 0}
 							</motion.button>
-							{user && user !== 'guest' && user.id === post.user.id &&
+							{user && user !== 'guest' && (user.roles.includes('ROLE_ADMIN') || user.id === post.user.id) &&
 								<Link to='/edit'>
 									<div className={styles.icon}>
 										<PiPencilBold />

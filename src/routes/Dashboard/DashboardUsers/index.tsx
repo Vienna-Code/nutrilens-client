@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'wouter'
 import styles from './styles.module.scss'
-import { PiCaretLeftBold, PiPencilBold, PiTrashBold, PiWarningBold } from 'react-icons/pi'
+import { PiCaretLeftBold, PiPencilBold } from 'react-icons/pi'
 import { useEffect, useState, type ChangeEvent } from 'react'
 import Api from '../../../utils/api'
 import LoadingPage from '../../../components/LoadingPage'
@@ -12,7 +12,6 @@ const DashboardUsers = () => {
 	const [users, setUsers] = useState<RealUser[]>()
 	const [search, setSearch] = useState('')
 	const [loadingSearch, setLoadingSearch] = useState(false)
-	const [deleteModal, setDeleteModal] = useState<{ id: number, username: string, email: string }>()
 	const [, navigate] = useLocation()
 
 	useEffect(() => {
@@ -45,51 +44,9 @@ const DashboardUsers = () => {
 		const { value } = e.currentTarget
 		setSearch(value)
 	}
-
-	const handleDelete = () => {
-		if (!deleteModal) return
-		
-		const { id } = deleteModal
-
-		Api.deleteProduct(`${id}`)
-		.then(() => {
-			Api.getUsers({
-				username: search || undefined
-			}).then(data => {
-				setUsers(data)
-				setDeleteModal(undefined)
-			})
-		})
-	}
 	
 	return (
 		<div className={styles.dashboardUsers}>
-			<AnimatePresence>
-				{deleteModal &&
-					<motion.div className={styles.deleteModalWrapper} initial={{ backgroundColor: 'var(--pr-color-tp)' }} animate={{ backgroundColor: 'var(--pr-color-op)' }} exit={{ opacity: 0 }} onClick={() => setDeleteModal(undefined)}>
-						<motion.div className={styles.deleteModal} initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={e => e.stopPropagation()}>
-							<div className={styles.message}>
-								<div className={styles.icon}>
-									<PiWarningBold />
-								</div>
-								<p>¿Realmente desea eliminar este usuario?</p>
-							</div>
-							<motion.div layoutId={`${deleteModal.id}`} className={styles.user}>
-								<div className={styles.title}>
-									{deleteModal.username}
-								</div>
-								<div className={styles.content}>
-									{deleteModal.email}
-								</div>
-							</motion.div>
-							<div className={styles.actions}>
-								<button onClick={() => setDeleteModal(undefined)}>No</button>
-								<button onClick={handleDelete}>Sí</button>
-							</div>
-						</motion.div>
-					</motion.div>
-				}
-			</AnimatePresence>
 			{!users ? <LoadingPage />
 			:
 				<>
@@ -124,12 +81,6 @@ const DashboardUsers = () => {
 													<PiPencilBold />
 												</div>
 												Editar
-											</button>
-											<button onClick={() => setDeleteModal(() => ({ id, username, email }))}>
-												<div className={styles.icon}>
-													<PiTrashBold />
-												</div>
-												Eliminar
 											</button>
 										</div>
 									</motion.div>

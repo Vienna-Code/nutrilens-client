@@ -37,11 +37,14 @@ import DashboardProducts from './routes/Dashboard/DashboardProducts'
 import DashboardPosts from './routes/Dashboard/DashboardPosts'
 import DashboardUsers from './routes/Dashboard/DashboardUsers'
 import AddUser from './routes/Dashboard/DashboardUsers/AddUser'
+import EditUser from './routes/Dashboard/DashboardUsers/EditUser'
+import EditProfile from './routes/Profile/EditProfile'
 
 const App = () => {
 	const user = useAllStore(state => state.user)
 	const setUser = useAllStore(state => state.setUser)
 	const [, navigate] = useLocation()
+	const [location] = useLocation()
 	
 	useEffect(() => {
 		if (user === undefined) {
@@ -62,7 +65,7 @@ const App = () => {
 	if (user === undefined) return <LoadingPage />
 	
 	return (
-		<div className={styles.main}>
+		<div className={`${styles.main} ${location === '/' ? styles.map : ''}`}>
 			<Switch>
 				<Route path={'/'} component={Home} />
 				<Route path={'/login'} nest>
@@ -95,6 +98,7 @@ const App = () => {
 				<Route path={'/profile'} nest>
 					<Switch>
 						<Route path={'/'} component={Profile} />
+						<Route path={'/edit'} component={EditProfile} />
 						<Route path={'/commerces'} component={ProfileCommerces} />
 						<Route path={'/products'} component={ProfileProducts} />
 						<Route path={'/reviews'} component={ProfileReviews} />
@@ -135,6 +139,7 @@ const App = () => {
 							<Switch>
 								<Route path={'/'} component={DashboardUsers} />
 								<Route path={'/add'} component={AddUser} />
+								<Route path={'/:id/edit'} component={EditUser} />
 							</Switch>
 						</Route>
 					</Switch>

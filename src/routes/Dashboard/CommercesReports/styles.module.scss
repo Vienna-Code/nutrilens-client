@@ -39,6 +39,10 @@
 				font-size: 1.2em;
 			}
 
+			.username {
+				color: var(--tx-color-op-2);
+			}
+
 			.content {
 				display: flex;
 				flex-direction: column;
@@ -50,10 +54,35 @@
 				align-items: center;
 				gap: 0.5em;
 				color: var(--tx-color-op-2);
+				text-decoration: underline;
 				
 				.icon {
 					display: flex;
 					align-items: center;
+				}
+			}
+
+			.actions {
+				width: 100%;
+				margin-top: 1em;
+				display: flex;
+				gap: 1em;
+
+				button {
+					background-color: var(--ac-color);
+					color: var(--pr-color);
+					display: flex;
+					gap: 0.5em;
+					flex: 1;
+					align-items: center;
+					justify-content: center;
+					padding: 0.7em;
+					clip-path: polygon(0.7em 0, 100% 0, 100% calc(100% - 0.7em), calc(100% - 0.7em) 100%, 0 100%, 0 0.7em);
+
+					.icon {
+						display: flex;
+						align-items: center;
+					}
 				}
 			}
 		}
