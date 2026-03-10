@@ -145,7 +145,7 @@ const Profile = () => {
 									</div>
 									Subir foto de perfil
 								</div>
-								<img src={image ? URL.createObjectURL(image) : user.profilePicture ? `${import.meta.env.VITE_API_URL}/images/${user.profilePicture}` : `https://ui-avatars.com/api/?name=${user.username}&background=3b9c6a&color=1c1c1c&size=48&font-size=0.35&uppercase=true`} alt='' />
+								<img src={image ? URL.createObjectURL(image) : user.profilePicture ? `/api/images/${user.profilePicture}` : `https://ui-avatars.com/api/?name=${user.username}&background=3b9c6a&color=1c1c1c&size=48&font-size=0.35&uppercase=true`} alt='' />
 								<input type="file" onChange={handleFile} ref={inputRef} />
 							</div>
 							{image &&

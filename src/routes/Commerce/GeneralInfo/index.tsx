@@ -267,7 +267,7 @@ const GeneralInfo = ({ commerce, setLocalVerify }: { commerce: Commerce, setLoca
 					<div className={styles.list}>
 						{commerce.commerceImages.map((uuid, i) => (
 							<div className={styles.image} key={uuid} onClick={() => setViewImages(i)}>
-								<img src={`${import.meta.env.VITE_API_URL}/images/${uuid}`} alt="" />
+								<img src={`/api/images/${uuid}`} alt="" />
 							</div>
 						))}
 					</div>

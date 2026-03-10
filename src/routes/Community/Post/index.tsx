@@ -151,7 +151,7 @@ const Post = () => {
 					<div className={styles.fullPost}>
 						<div className={styles.top}>
 							<div className={styles.profilePic}>
-								<img src={post.user.profilePicture ? `${import.meta.env.VITE_API_URL}/images/${post.user.profilePicture}` : `https://ui-avatars.com/api/?name=${post.user.username}&background=3b9c6a&color=1c1c1c&size=48&font-size=0.35&uppercase=true`} alt="" />
+								<img src={post.user.profilePicture ? `/api/images/${post.user.profilePicture}` : `https://ui-avatars.com/api/?name=${post.user.username}&background=3b9c6a&color=1c1c1c&size=48&font-size=0.35&uppercase=true`} alt="" />
 							</div>
 							<div className={styles.info}>
 								<div className={styles.name}>

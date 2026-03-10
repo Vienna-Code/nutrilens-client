@@ -39,5 +39,5 @@ export const convertImage = (img: HTMLImageElement, name: string, square: boolea
 }
 
 export const imageURL = (uuid: string) => {
-	return `${import.meta.env.VITE_API_URL}/images/${uuid}`
+	return `/api/images/${uuid}`
 }

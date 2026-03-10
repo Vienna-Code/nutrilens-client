@@ -57,7 +57,7 @@ const MiniPost = ({ post }: { post: Post }) => {
 		<div className={styles.miniPost} onClick={() => navigate(`/${id}`)}>
 			<div className={styles.top}>
 				<div className={styles.profilePic} onClick={e => e.stopPropagation()}>
-					<img src={postUser.profilePicture ? `${import.meta.env.VITE_API_URL}/images/${postUser.profilePicture}` : `https://ui-avatars.com/api/?name=${postUser.username}&background=3b9c6a&color=1c1c1c&size=48&font-size=0.35&uppercase=true`} alt="" />
+					<img src={postUser.profilePicture ? `/api/images/${postUser.profilePicture}` : `https://ui-avatars.com/api/?name=${postUser.username}&background=3b9c6a&color=1c1c1c&size=48&font-size=0.35&uppercase=true`} alt="" />
 				</div>
 				<div className={styles.info} onClick={e => e.stopPropagation()}>
 					<div className={styles.name}>

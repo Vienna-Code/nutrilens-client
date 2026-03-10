@@ -48,7 +48,7 @@ const ImageVisualizer = ({ viewImages, setViewImages, images }: Props) => {
 			<div ref={emblaRef} className={`${styles.viewImages} embla`}>
 				<div className={`${styles.images} embla__container`} style={{ width: `${images.length * 100}%` }}>
 					{images.map(uuid => {
-						const url = `${import.meta.env.VITE_API_URL}/images/${uuid}`
+						const url = `/api/images/${uuid}`
 						
 						return (
 							<div className={`${styles.image} embla__slide`} key={url} onClick={() => setViewImages(undefined)}>
