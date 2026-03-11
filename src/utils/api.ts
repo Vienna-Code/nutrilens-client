@@ -1,8 +1,8 @@
 import type { LatLngTuple } from 'leaflet'
 
 const API_URL = '/api'
-const OSRM_URL = import.meta.env.VITE_OSRM_URL as string
-const NOMINATIM_URL = import.meta.env.VITE_NOMINATIM_URL as string
+const OSRM_URL = '/osrm'
+const NOMINATIM_URL = '/nominatim'
 
 class Api {
 	private static newFetch = (url: string, options: RequestInit) => {
