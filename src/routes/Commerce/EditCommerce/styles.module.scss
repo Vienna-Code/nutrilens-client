@@ -230,10 +230,11 @@
 				}
 
 				.hours {
-					display: flex;
+					display: grid;
 					gap: 1em;
 					width: 100%;
 					margin-top: 0.5em;
+					grid-template-columns: 1fr 1fr;
 
 					fieldset {
 						flex: 1;
@@ -244,6 +245,19 @@
 							&::-webkit-calendar-picker-indicator {
 								filter: invert(42%) sepia(18%) saturate(6224%) hue-rotate(126deg) brightness(101%) contrast(54%);
 							}
+						}
+					}
+
+					.closed {
+						width: 100%;
+						grid-column: span 2;
+						
+						label {
+							position: initial;
+							top: 0;
+							left: 0;
+							translate: initial;
+							width: 100%;
 						}
 					}
 				}

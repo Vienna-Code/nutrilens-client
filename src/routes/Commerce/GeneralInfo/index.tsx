@@ -226,7 +226,7 @@ const GeneralInfo = ({ commerce, setLocalVerify }: { commerce: Commerce, setLoca
 						<summary onClick={() => setSummary(!summary)}>
 							<motion.div animate={{ rotate: summary ? 90 : 0 }} className={styles.arrow}><PiCaretRightBold /></motion.div>
 							<div className={styles.dayName}>{days[today]}</div>
-							{!orderDays[today].closed ? `${hourFormat.format(parseHour((orderDays[today].opensAt)))} - ${hourFormat.format(parseHour((orderDays[today].closesAt)))}` : 'Cerrado'}
+							{!orderDays[0].closed ? `${hourFormat.format(parseHour((orderDays[0].opensAt)))} - ${hourFormat.format(parseHour((orderDays[0].closesAt)))}` : 'Cerrado'}
 						</summary>
 						<div className={styles.days}>
 							{orderDays.filter((_x, i) => i !== 0).map(({ opensAt, closesAt, weekday, closed }, i) => {

@@ -6,7 +6,7 @@ import Api from '../../../utils/api'
 import LoadingChild from '../../../components/LoadingChild'
 import { PiCaretLeftBold, PiCheckFatBold } from 'react-icons/pi'
 import { Link, useLocation, useParams } from 'wouter'
-import { Checkbox, FormControlLabel } from '@mui/material'
+import { Checkbox, FormControlLabel, Typography } from '@mui/material'
 import Tippy from '@tippyjs/react'
 import LoadingPage from '../../../components/LoadingPage'
 import { motion } from 'framer-motion'
@@ -39,7 +39,7 @@ const EditCommerce = () => {
 	// const [currentLocation, setCurrentLocation] = useState<LatLngTuple>()
 	const [phone, setPhone] = useState('')
 	const [images, setImages] = useState<Images<File|string>>([])
-	const [schedules, setSchedules] = useState(Array(7).fill(null).map((_x, i) => ({ weekday: i, opensAt: '', closesAt: '' })))
+	const [schedules, setSchedules] = useState(Array(7).fill(null).map((_x, i) => ({ weekday: i, opensAt: '', closesAt: '', closed: false })))
 	const [scheduleDay, setScheduleDay] = useState("")
 	const [error, setError] = useState({ field: '', message: '' })
 	const [loading, setLoading] = useState(false)
@@ -84,7 +84,7 @@ const EditCommerce = () => {
 			setSchedules(prev => prev.map(({ weekday, opensAt, closesAt }) => {
 				const findDay = data.data.commerceSchedules.find((x: { weekday: number }) => x.weekday === weekday)
 
-				if (!findDay) return { weekday, opensAt, closesAt }
+				if (!findDay) return { weekday, opensAt, closesAt, closed: true }
 
 				const parseOpensAt = findDay.opensAt.split('T')[1].split('+')[0].substring(0, 5)
 				const parseClosesAt = findDay.closesAt.split('T')[1].split('+')[0].substring(0, 5)
@@ -92,7 +92,8 @@ const EditCommerce = () => {
 				return {
 					weekday,
 					opensAt: parseOpensAt,
-					closesAt: parseClosesAt
+					closesAt: parseClosesAt,
+					closed: false
 				}
 			}))
 		}).catch(() => setCommerce(null))
@@ -194,6 +195,13 @@ const EditCommerce = () => {
 
 		setSchedules(prev => prev.map((x, i) => i === +scheduleDay ? ({ ...x, closesAt: value.substring(0, 5) }) : x))
 	}
+
+	const handleScheduleClosed = (e: ChangeEvent<HTMLInputElement>) => {
+		if (scheduleDay === '') return e.preventDefault()
+		const { checked } = e.currentTarget
+
+		setSchedules(prev => prev.map((x, i) => i === +scheduleDay ? ({ ...x, closed: checked }) : x))
+	}
 	
 	const resetError = () => {
 		setError(() => ({ field: '', message: '' }))
@@ -213,6 +221,8 @@ const EditCommerce = () => {
 
 		const parseImages = images.length > 0 ? images.map(x => x.image) : undefined
 
+		const commerceSchedules = schedule.value !== '' ? schedules.filter(x => !x.closed).map(({ weekday, opensAt, closesAt }) => ({ weekday, opensAt, closesAt })) : undefined
+
 		setLoading(true)
 
 		const uuids = parseImages ? await Api.uploadImages(parseImages).then(uuids => uuids as string[]) : null
@@ -226,7 +236,7 @@ const EditCommerce = () => {
 			contactInfo: Object.keys(contactInfo).length > 0 ? contactInfo : undefined,
 			paymentMethods: paymentMethods.filter(x => x.checked).map(x => x.value),
 			images: uuids,
-			commerceSchedules: schedule.value !== '' ? schedules : undefined
+			commerceSchedules
 		}
 
 		if (!user.roles.includes('ROLE_ADMIN')) {
@@ -379,12 +389,15 @@ const EditCommerce = () => {
 								<div className={styles.hours}>
 									<fieldset>
 										<label htmlFor="opensAt">Abre a las</label>
-										<input id='opensAt' type="time" placeholder=' ' value={schedules[isNaN(+scheduleDay) ? 1 : +scheduleDay].opensAt} onChange={handleOpensAt} step="1800" disabled={scheduleDay === ''} />
+										<input id='opensAt' type="time" placeholder=' ' value={schedules[isNaN(+scheduleDay) ? 1 : +scheduleDay].opensAt} onChange={handleOpensAt} step="1800" disabled={scheduleDay === '' || schedules[scheduleDay === '' ? 1 : +scheduleDay].closed} />
 									</fieldset>
 									<fieldset>
 										<label htmlFor="closesAt">Cierra a las</label>
-										<input id='closesAt' type="time" placeholder=' ' value={schedules[isNaN(+scheduleDay) ? 1 : +scheduleDay].closesAt} onChange={handleClosesAt} step="1800" disabled={scheduleDay === ''} />
+										<input id='closesAt' type="time" placeholder=' ' value={schedules[isNaN(+scheduleDay) ? 1 : +scheduleDay].closesAt} onChange={handleClosesAt} step="1800" disabled={scheduleDay === '' || schedules[scheduleDay === '' ? 1 : +scheduleDay].closed} />
 									</fieldset>
+									<div className={styles.closed}>
+										<FormControlLabel control={<Checkbox sx={sxCheck} name='closed' onChange={handleScheduleClosed} checked={schedules[scheduleDay === '' ? 1 : +scheduleDay].closed} />} value={false} label={<Typography style={{ fontFamily: 'Signika' }}>Cerrado todo el día</Typography>} />
+									</div>
 								</div>
 							</fieldset>
 							<fieldset>
